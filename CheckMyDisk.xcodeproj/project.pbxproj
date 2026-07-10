@@ -1,0 +1,452 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00000000000000000000101 /* CheckMyDiskApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000201 /* CheckMyDiskApp.swift */; };
+		A00000000000000000000102 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000202 /* Models.swift */; };
+		A00000000000000000000103 /* SmartctlParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000203 /* SmartctlParser.swift */; };
+		A00000000000000000000104 /* HealthEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000204 /* HealthEvaluator.swift */; };
+		A00000000000000000000105 /* SmartctlRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000205 /* SmartctlRunner.swift */; };
+		A00000000000000000000106 /* ReportBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000206 /* ReportBuilder.swift */; };
+		A00000000000000000000107 /* SATSupportDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000207 /* SATSupportDetector.swift */; };
+		A00000000000000000000108 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000208 /* Persistence.swift */; };
+		A00000000000000000000109 /* DriveStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000209 /* DriveStore.swift */; };
+		A00000000000000000000110 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000210 /* ContentView.swift */; };
+		A00000000000000000000111 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000211 /* DashboardView.swift */; };
+		A00000000000000000000112 /* HealthIndicatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000212 /* HealthIndicatorsView.swift */; };
+		A00000000000000000000113 /* LogViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000213 /* LogViews.swift */; };
+		A00000000000000000000114 /* CompatibilityPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000214 /* CompatibilityPanel.swift */; };
+		A00000000000000000000115 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000215 /* PreferencesView.swift */; };
+		A00000000000000000000116 /* smartctl in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000216 /* smartctl */; };
+		A00000000000000000000117 /* ThirdPartyNotices.txt in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000217 /* ThirdPartyNotices.txt */; };
+		A00000000000000000000118 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000218 /* libsqlite3.tbd */; };
+		A00000000000000000000119 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000220 /* ProcessRunner.swift */; };
+		A00000000000000000000120 /* VolumeInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000221 /* VolumeInfoProvider.swift */; };
+		A00000000000000000000121 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000222 /* HistoryView.swift */; };
+		A00000000000000000000122 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000223 /* Localizable.xcstrings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A00000000000000000000201 /* CheckMyDiskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMyDiskApp.swift; sourceTree = "<group>"; };
+		A00000000000000000000202 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		A00000000000000000000203 /* SmartctlParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartctlParser.swift; sourceTree = "<group>"; };
+		A00000000000000000000204 /* HealthEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthEvaluator.swift; sourceTree = "<group>"; };
+		A00000000000000000000205 /* SmartctlRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartctlRunner.swift; sourceTree = "<group>"; };
+		A00000000000000000000206 /* ReportBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportBuilder.swift; sourceTree = "<group>"; };
+		A00000000000000000000207 /* SATSupportDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SATSupportDetector.swift; sourceTree = "<group>"; };
+		A00000000000000000000208 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		A00000000000000000000209 /* DriveStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveStore.swift; sourceTree = "<group>"; };
+		A00000000000000000000210 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A00000000000000000000211 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		A00000000000000000000212 /* HealthIndicatorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthIndicatorsView.swift; sourceTree = "<group>"; };
+		A00000000000000000000213 /* LogViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViews.swift; sourceTree = "<group>"; };
+		A00000000000000000000214 /* CompatibilityPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompatibilityPanel.swift; sourceTree = "<group>"; };
+		A00000000000000000000215 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+		A00000000000000000000216 /* smartctl */ = {isa = PBXFileReference; lastKnownFileType = file; path = smartctl; sourceTree = "<group>"; };
+		A00000000000000000000217 /* ThirdPartyNotices.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ThirdPartyNotices.txt; sourceTree = "<group>"; };
+		A00000000000000000000218 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		A00000000000000000000220 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
+		A00000000000000000000221 /* VolumeInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeInfoProvider.swift; sourceTree = "<group>"; };
+		A00000000000000000000222 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		A00000000000000000000223 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		A00000000000000000000219 /* CheckMyDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CheckMyDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00000000000000000000301 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000118 /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00000000000000000000401 = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000402 /* CheckMyDisk */,
+				A00000000000000000000408 /* Frameworks */,
+				A00000000000000000000409 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000402 /* CheckMyDisk */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000403 /* App */,
+				A00000000000000000000404 /* Core */,
+				A00000000000000000000405 /* Views */,
+				A00000000000000000000406 /* Resources */,
+			);
+			path = Sources/CheckMyDisk;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000403 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000201 /* CheckMyDiskApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000404 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000202 /* Models.swift */,
+				A00000000000000000000203 /* SmartctlParser.swift */,
+				A00000000000000000000204 /* HealthEvaluator.swift */,
+				A00000000000000000000205 /* SmartctlRunner.swift */,
+				A00000000000000000000206 /* ReportBuilder.swift */,
+				A00000000000000000000207 /* SATSupportDetector.swift */,
+				A00000000000000000000208 /* Persistence.swift */,
+				A00000000000000000000209 /* DriveStore.swift */,
+				A00000000000000000000220 /* ProcessRunner.swift */,
+				A00000000000000000000221 /* VolumeInfoProvider.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000405 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000210 /* ContentView.swift */,
+				A00000000000000000000211 /* DashboardView.swift */,
+				A00000000000000000000212 /* HealthIndicatorsView.swift */,
+				A00000000000000000000213 /* LogViews.swift */,
+				A00000000000000000000214 /* CompatibilityPanel.swift */,
+				A00000000000000000000215 /* PreferencesView.swift */,
+				A00000000000000000000222 /* HistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000406 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000407 /* Smartctl */,
+				A00000000000000000000217 /* ThirdPartyNotices.txt */,
+				A00000000000000000000223 /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000407 /* Smartctl */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000216 /* smartctl */,
+			);
+			path = Smartctl;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000408 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000218 /* libsqlite3.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000409 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000219 /* CheckMyDisk.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00000000000000000000501 /* CheckMyDisk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000602 /* Build configuration list for PBXNativeTarget "CheckMyDisk" */;
+			buildPhases = (
+				A00000000000000000000302 /* Sources */,
+				A00000000000000000000301 /* Frameworks */,
+				A00000000000000000000303 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CheckMyDisk;
+			productName = CheckMyDisk;
+			productReference = A00000000000000000000219 /* CheckMyDisk.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00000000000000000000502 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					A00000000000000000000501 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = A00000000000000000000601 /* Build configuration list for PBXProject "CheckMyDisk" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				es,
+				Base,
+			);
+			mainGroup = A00000000000000000000401;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A00000000000000000000409 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00000000000000000000501 /* CheckMyDisk */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00000000000000000000303 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000116 /* smartctl in Resources */,
+				A00000000000000000000117 /* ThirdPartyNotices.txt in Resources */,
+				A00000000000000000000122 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00000000000000000000302 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000101 /* CheckMyDiskApp.swift in Sources */,
+				A00000000000000000000102 /* Models.swift in Sources */,
+				A00000000000000000000103 /* SmartctlParser.swift in Sources */,
+				A00000000000000000000104 /* HealthEvaluator.swift in Sources */,
+				A00000000000000000000105 /* SmartctlRunner.swift in Sources */,
+				A00000000000000000000106 /* ReportBuilder.swift in Sources */,
+				A00000000000000000000107 /* SATSupportDetector.swift in Sources */,
+				A00000000000000000000108 /* Persistence.swift in Sources */,
+				A00000000000000000000109 /* DriveStore.swift in Sources */,
+				A00000000000000000000110 /* ContentView.swift in Sources */,
+				A00000000000000000000111 /* DashboardView.swift in Sources */,
+				A00000000000000000000112 /* HealthIndicatorsView.swift in Sources */,
+				A00000000000000000000113 /* LogViews.swift in Sources */,
+				A00000000000000000000114 /* CompatibilityPanel.swift in Sources */,
+				A00000000000000000000115 /* PreferencesView.swift in Sources */,
+				A00000000000000000000119 /* ProcessRunner.swift in Sources */,
+				A00000000000000000000120 /* VolumeInfoProvider.swift in Sources */,
+				A00000000000000000000121 /* HistoryView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A00000000000000000000603 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A00000000000000000000604 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		A00000000000000000000605 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CheckMyDisk;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 CheckMyDisk contributors.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDisk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A00000000000000000000606 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CheckMyDisk;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 CheckMyDisk contributors.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDisk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00000000000000000000601 /* Build configuration list for PBXProject "CheckMyDisk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000603 /* Debug */,
+				A00000000000000000000604 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000602 /* Build configuration list for PBXNativeTarget "CheckMyDisk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000605 /* Debug */,
+				A00000000000000000000606 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00000000000000000000502 /* Project object */;
+}
