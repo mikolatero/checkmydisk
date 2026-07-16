@@ -29,6 +29,7 @@
 		A00000000000000000000120 /* VolumeInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000221 /* VolumeInfoProvider.swift */; };
 		A00000000000000000000121 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000222 /* HistoryView.swift */; };
 		A00000000000000000000122 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000223 /* Localizable.xcstrings */; };
+		A00000000000000000000123 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000224 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,14 +48,15 @@
 		A00000000000000000000213 /* LogViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViews.swift; sourceTree = "<group>"; };
 		A00000000000000000000214 /* CompatibilityPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompatibilityPanel.swift; sourceTree = "<group>"; };
 		A00000000000000000000215 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
-		A00000000000000000000216 /* smartctl */ = {isa = PBXFileReference; lastKnownFileType = file; path = smartctl; sourceTree = "<group>"; };
+		A00000000000000000000216 /* smartctl */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = smartctl; sourceTree = "<group>"; };
 		A00000000000000000000217 /* ThirdPartyNotices.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ThirdPartyNotices.txt; sourceTree = "<group>"; };
 		A00000000000000000000218 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		A00000000000000000000219 /* CheckMyDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CheckMyDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000220 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
 		A00000000000000000000221 /* VolumeInfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeInfoProvider.swift; sourceTree = "<group>"; };
 		A00000000000000000000222 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		A00000000000000000000223 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		A00000000000000000000219 /* CheckMyDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CheckMyDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000224 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,13 +74,13 @@
 		A00000000000000000000401 = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000402 /* CheckMyDisk */,
+				A00000000000000000000402 /* Sources/CheckMyDisk */,
 				A00000000000000000000408 /* Frameworks */,
 				A00000000000000000000409 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A00000000000000000000402 /* CheckMyDisk */ = {
+		A00000000000000000000402 /* Sources/CheckMyDisk */ = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000403 /* App */,
@@ -132,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000407 /* Smartctl */,
+				A00000000000000000000224 /* Assets.xcassets */,
 				A00000000000000000000217 /* ThirdPartyNotices.txt */,
 				A00000000000000000000223 /* Localizable.xcstrings */,
 			);
@@ -190,7 +193,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					A00000000000000000000501 = {
 						CreatedOnToolsVersion = 26.0;
@@ -225,6 +228,7 @@
 				A00000000000000000000116 /* smartctl in Resources */,
 				A00000000000000000000117 /* ThirdPartyNotices.txt in Resources */,
 				A00000000000000000000122 /* Localizable.xcstrings in Resources */,
+				A00000000000000000000123 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +267,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -292,6 +297,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -315,6 +321,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -324,6 +331,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -353,6 +361,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -369,6 +378,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -376,10 +386,12 @@
 		A00000000000000000000605 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -402,10 +414,12 @@
 		A00000000000000000000606 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;

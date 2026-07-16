@@ -91,8 +91,11 @@ struct SelfTestsView: View {
                     }
                     .buttonStyle(.bordered)
                 }
+
+                Spacer()
             }
             .padding(14)
+            .frame(maxWidth: .infinity)
             .background(.quaternary.opacity(0.5))
 
             if store.isSelfTestPolling || snapshot.activeSelfTest?.isRunning == true {
@@ -192,6 +195,9 @@ struct TableOrEmpty<Content: View>: View {
                 content
             }
         }
+        // Pinned to the top; otherwise the whole block floats vertically
+        // centered in the detail column.
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 

@@ -194,6 +194,13 @@ struct DriveSnapshot: Identifiable, Codable, Hashable {
     var isRotational: Bool? {
         rotationRate.map { $0 > 0 }
     }
+
+    /// Whether the essential health data could be read. When true, smartctl
+    /// error messages and exit bits 1/2 refer to optional sub-commands the
+    /// drive does not support, not to a real read failure.
+    var hasBasicHealthData: Bool {
+        smartStatusPassed != nil || nvme != nil || !attributes.isEmpty
+    }
 }
 
 struct HealthProblem: Identifiable, Codable, Hashable {

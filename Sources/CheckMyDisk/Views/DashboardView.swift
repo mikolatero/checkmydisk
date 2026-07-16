@@ -16,7 +16,7 @@ struct DashboardView: View {
                 header
                 if !snapshot.messages.isEmpty {
                     SectionBox(String(localized: "smartctl Messages")) {
-                        MessagesView(messages: snapshot.messages)
+                        MessagesView(messages: snapshot.messages, isInformational: snapshot.hasBasicHealthData)
                     }
                 }
                 SectionBox(String(localized: "General Information")) {
@@ -292,18 +292,32 @@ struct TemperatureGauge: View {
 
 struct MessagesView: View {
     let messages: [SmartMessage]
+    /// True when the health data itself was read fine, so these messages are
+    /// notices about unsupported optional features, not read failures.
+    let isInformational: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             ForEach(Array(messages.enumerated()), id: \.offset) { _, message in
                 Label {
                     Text(message.text)
+                        .foregroundStyle(isInformational ? .secondary : .primary)
                         .textSelection(.enabled)
                 } icon: {
-                    Image(systemName: message.severity.lowercased() == "error" ? "exclamationmark.triangle.fill" : "info.circle")
-                        .foregroundStyle(message.severity.lowercased() == "error" ? .yellow : .secondary)
+                    if isInformational {
+                        Image(systemName: "info.circle")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Image(systemName: message.severity.lowercased() == "error" ? "exclamationmark.triangle.fill" : "info.circle")
+                            .foregroundStyle(message.severity.lowercased() == "error" ? .yellow : .secondary)
+                    }
                 }
                 .font(.callout)
+            }
+            if isInformational {
+                Text("These notices come from smartctl itself: the drive does not support some optional log pages. The health data was read correctly and the assessment is not affected.")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
     }

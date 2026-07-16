@@ -40,8 +40,14 @@ struct SidebarView: View {
             store.selectedDeviceID.map { SidebarSelection(deviceID: $0, section: store.selectedSection) }
         } set: { newValue in
             if let newValue {
-                store.selectedDeviceID = newValue.deviceID
-                store.selectedSection = newValue.section
+                Task { @MainActor in
+                    if store.selectedDeviceID != newValue.deviceID {
+                        store.selectedDeviceID = newValue.deviceID
+                    }
+                    if store.selectedSection != newValue.section {
+                        store.selectedSection = newValue.section
+                    }
+                }
             }
         }
     }

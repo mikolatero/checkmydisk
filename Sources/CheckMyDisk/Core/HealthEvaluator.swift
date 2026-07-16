@@ -122,8 +122,7 @@ enum HealthEvaluator {
         // internal NVMe rejects reading the error log). Only flag the drive when
         // not even the basic SMART status could be read; otherwise the failure
         // details are already visible in the messages section.
-        let couldReadBasics = snapshot.smartStatusPassed != nil || snapshot.nvme != nil || !snapshot.attributes.isEmpty
-        if (status.contains(.deviceOpenFailed) || status.contains(.smartCommandFailed)) && !couldReadBasics {
+        if (status.contains(.deviceOpenFailed) || status.contains(.smartCommandFailed)) && !snapshot.hasBasicHealthData {
             problems.append(.init(
                 title: String(localized: "SMART data may be incomplete"),
                 state: .warning,
@@ -137,8 +136,7 @@ enum HealthEvaluator {
         // Error messages describe tooling/communication issues, not drive health.
         // They only become problems when the basic health data is missing too;
         // either way they stay visible in the Dashboard's messages section.
-        let couldReadBasics = snapshot.smartStatusPassed != nil || snapshot.nvme != nil || !snapshot.attributes.isEmpty
-        guard !couldReadBasics else { return [] }
+        guard !snapshot.hasBasicHealthData else { return [] }
         return snapshot.messages
             .filter { $0.severity.lowercased() == "error" && !$0.text.isEmpty }
             .map { message in

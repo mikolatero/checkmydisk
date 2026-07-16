@@ -16,14 +16,15 @@ struct HealthIndicatorsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
+            HStack(spacing: 12) {
                 Picker("", selection: $typeFilter) {
                     Text("Any Type").tag("Any Type")
                     Text("Pre-Fail").tag("pre-fail")
                     Text("Life-Span").tag("life-span")
                 }
                 .pickerStyle(.segmented)
-                .frame(width: 260)
+                .labelsHidden()
+                .fixedSize()
 
                 Picker("", selection: $statusFilter) {
                     Text("Any Status").tag("Any Status")
@@ -31,25 +32,29 @@ struct HealthIndicatorsView: View {
                         Text(state.rawValue).tag(state.rawValue)
                     }
                 }
-                .pickerStyle(.segmented)
-                .frame(width: 420)
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .fixedSize()
 
-                Spacer()
+                Spacer(minLength: 12)
                 TextField("Search", text: $search)
                     .textFieldStyle(.roundedBorder)
-                    .frame(width: 220)
+                    .frame(minWidth: 120, maxWidth: 220)
             }
             .padding(10)
             .background(.quaternary.opacity(0.5))
 
-            HStack {
+            // Mismo espaciado, anchos y padding acumulado (10 del LazyVStack +
+            // 10 de la fila) que AttributeRow para que las columnas cuadren.
+            HStack(alignment: .center, spacing: 10) {
                 header("id", width: 48)
                 header("name", width: 260)
-                header("raw value", width: 120)
-                header("value", width: 160)
+                header("raw value", width: 120, alignment: .trailing)
+                header("value", width: 160, alignment: .trailing)
                 header("status", width: 220)
+                Spacer()
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 20)
             .padding(.vertical, 5)
             .background(.quaternary)
 
@@ -64,12 +69,12 @@ struct HealthIndicatorsView: View {
         }
     }
 
-    private func header(_ text: String, width: CGFloat) -> some View {
+    private func header(_ text: String, width: CGFloat, alignment: Alignment = .leading) -> some View {
         Text(text)
             .font(.caption.weight(.bold))
             .textCase(.lowercase)
             .foregroundStyle(.secondary)
-            .frame(width: width, alignment: .leading)
+            .frame(width: width, alignment: alignment)
     }
 }
 
