@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PreferencesView: View {
     @EnvironmentObject private var store: DriveStore
+    @EnvironmentObject private var softwareUpdateController: SoftwareUpdateController
 
     var body: some View {
         Form {
@@ -49,6 +50,15 @@ struct PreferencesView: View {
 
             Section("Reports") {
                 Toggle("Anonymize serial numbers and WWN in reports", isOn: $store.settings.anonymizeReports)
+            }
+
+            Section("Software Updates") {
+                Button {
+                    softwareUpdateController.checkForUpdates()
+                } label: {
+                    Label("Check for Updates…", systemImage: "arrow.down.circle")
+                }
+                .disabled(!softwareUpdateController.canCheckForUpdates)
             }
 
             Text("Changes are saved automatically.")

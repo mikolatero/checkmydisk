@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>CheckMyDisk</title>
+        <item>
+            <title>0.1.1</title>
+            <pubDate>Thu, 16 Jul 2026 15:54:07 +0200</pubDate>
+            <sparkle:version>2</sparkle:version>
+            <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/mikolatero/checkmydisk/releases/download/v0.1.1/CheckMyDisk-0.1.1-2.zip" length="5401702" type="application/octet-stream" sparkle:edSignature="CWCi0Qkvc+37kdEmIdV5rZvxCYpDHakdqTY4F034/zmJM3Xtspsj3iHaNzNK0iJA6MtJQq5mpwqAQDZlSdXpAg=="/>
+        </item>
+        <item>
+            <title>0.1.0</title>
+            <pubDate>Thu, 16 Jul 2026 15:44:20 +0200</pubDate>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/mikolatero/checkmydisk/releases/download/v0.1.0/CheckMyDisk-0.1.0-1.zip" length="5401699" type="application/octet-stream" sparkle:edSignature="ttXUm8IR4s5MmsXZjIczopmzxICxasfAgm3IIrCXPrWUDT6big0taSq09/alhfIPOrDOEqvZNcBDKajTK8ltDA=="/>
+        </item>
+    </channel>
+</rss>

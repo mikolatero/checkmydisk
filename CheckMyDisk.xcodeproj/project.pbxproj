@@ -30,7 +30,25 @@
 		A00000000000000000000121 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000222 /* HistoryView.swift */; };
 		A00000000000000000000122 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000223 /* Localizable.xcstrings */; };
 		A00000000000000000000123 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000224 /* Assets.xcassets */; };
+		A00000000000000000000124 /* SoftwareUpdateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000225 /* SoftwareUpdateController.swift */; };
+		A00000000000000000000125 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000802 /* Sparkle */; };
+		A00000000000000000000130 /* AppleNVMeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */; };
+		A00000000000000000000131 /* HealthEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000231 /* HealthEvaluatorTests.swift */; };
+		A00000000000000000000132 /* ParserExtendedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000232 /* ParserExtendedTests.swift */; };
+		A00000000000000000000133 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000233 /* ParserTests.swift */; };
+		A00000000000000000000134 /* ProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000234 /* ProcessRunnerTests.swift */; };
+		A00000000000000000000135 /* SnapshotStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000235 /* SnapshotStoreTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A00000000000000000000702 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000502 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000501;
+			remoteInfo = CheckMyDisk;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A00000000000000000000201 /* CheckMyDiskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMyDiskApp.swift; sourceTree = "<group>"; };
@@ -57,6 +75,15 @@
 		A00000000000000000000222 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		A00000000000000000000223 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A00000000000000000000224 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A00000000000000000000225 /* SoftwareUpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateController.swift; sourceTree = "<group>"; };
+		A00000000000000000000226 /* CheckMyDisk-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CheckMyDisk-Info.plist"; sourceTree = "<group>"; };
+		A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleNVMeIntegrationTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000231 /* HealthEvaluatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthEvaluatorTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000232 /* ParserExtendedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParserExtendedTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000233 /* ParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParserTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000234 /* ProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunnerTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000235 /* SnapshotStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStoreTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000236 /* CheckMyDiskTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheckMyDiskTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +91,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A00000000000000000000125 /* Sparkle in Frameworks */,
 				A00000000000000000000118 /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000305 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +110,8 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000402 /* Sources/CheckMyDisk */,
+				A00000000000000000000411 /* Config */,
+				A00000000000000000000410 /* Tests/CheckMyDiskTests */,
 				A00000000000000000000408 /* Frameworks */,
 				A00000000000000000000409 /* Products */,
 			);
@@ -95,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000201 /* CheckMyDiskApp.swift */,
+				A00000000000000000000225 /* SoftwareUpdateController.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -161,8 +199,30 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000219 /* CheckMyDisk.app */,
+				A00000000000000000000236 /* CheckMyDiskTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000410 /* Tests/CheckMyDiskTests */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */,
+				A00000000000000000000231 /* HealthEvaluatorTests.swift */,
+				A00000000000000000000232 /* ParserExtendedTests.swift */,
+				A00000000000000000000233 /* ParserTests.swift */,
+				A00000000000000000000234 /* ProcessRunnerTests.swift */,
+				A00000000000000000000235 /* SnapshotStoreTests.swift */,
+			);
+			path = Tests/CheckMyDiskTests;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000411 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000226 /* CheckMyDisk-Info.plist */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,9 +241,30 @@
 			dependencies = (
 			);
 			name = CheckMyDisk;
+			packageProductDependencies = (
+				A00000000000000000000802 /* Sparkle */,
+			);
 			productName = CheckMyDisk;
 			productReference = A00000000000000000000219 /* CheckMyDisk.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000503 /* CheckMyDiskTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000609 /* Build configuration list for PBXNativeTarget "CheckMyDiskTests" */;
+			buildPhases = (
+				A00000000000000000000304 /* Sources */,
+				A00000000000000000000305 /* Frameworks */,
+				A00000000000000000000306 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00000000000000000000701 /* PBXTargetDependency */,
+			);
+			name = CheckMyDiskTests;
+			productName = CheckMyDiskTests;
+			productReference = A00000000000000000000236 /* CheckMyDiskTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -197,6 +278,10 @@
 				TargetAttributes = {
 					A00000000000000000000501 = {
 						CreatedOnToolsVersion = 26.0;
+					};
+					A00000000000000000000503 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = A00000000000000000000501;
 					};
 				};
 			};
@@ -212,10 +297,14 @@
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A00000000000000000000409 /* Products */;
+			packageReferences = (
+				A00000000000000000000801 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				A00000000000000000000501 /* CheckMyDisk */,
+				A00000000000000000000503 /* CheckMyDiskTests */,
 			);
 		};
 /* End PBXProject section */
@@ -232,6 +321,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A00000000000000000000306 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -240,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A00000000000000000000101 /* CheckMyDiskApp.swift in Sources */,
+				A00000000000000000000124 /* SoftwareUpdateController.swift in Sources */,
 				A00000000000000000000102 /* Models.swift in Sources */,
 				A00000000000000000000103 /* SmartctlParser.swift in Sources */,
 				A00000000000000000000104 /* HealthEvaluator.swift in Sources */,
@@ -260,7 +357,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A00000000000000000000304 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000130 /* AppleNVMeIntegrationTests.swift in Sources */,
+				A00000000000000000000131 /* HealthEvaluatorTests.swift in Sources */,
+				A00000000000000000000132 /* ParserExtendedTests.swift in Sources */,
+				A00000000000000000000133 /* ParserTests.swift in Sources */,
+				A00000000000000000000134 /* ProcessRunnerTests.swift in Sources */,
+				A00000000000000000000135 /* SnapshotStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A00000000000000000000701 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000501 /* CheckMyDisk */;
+			targetProxy = A00000000000000000000702 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A00000000000000000000603 /* Debug */ = {
@@ -388,21 +506,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CheckMyDisk;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 CheckMyDisk contributors.";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Config/CheckMyDisk-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDisk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -416,26 +532,74 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CheckMyDisk;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 CheckMyDisk contributors.";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Config/CheckMyDisk-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDisk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A00000000000000000000607 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDiskTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CheckMyDisk.app/Contents/MacOS/CheckMyDisk";
+			};
+			name = Debug;
+		};
+		A00000000000000000000608 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDiskTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CheckMyDisk.app/Contents/MacOS/CheckMyDisk";
 			};
 			name = Release;
 		};
@@ -460,7 +624,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A00000000000000000000609 /* Build configuration list for PBXNativeTarget "CheckMyDiskTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000607 /* Debug */,
+				A00000000000000000000608 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A00000000000000000000801 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A00000000000000000000802 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A00000000000000000000801 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A00000000000000000000502 /* Project object */;
 }

@@ -32,6 +32,7 @@ It uses a dual `smartctl` backend:
 swift test
 swift build
 swift run CheckMyDisk
+xcodebuild test -project CheckMyDisk.xcodeproj -scheme CheckMyDisk -destination 'platform=macOS' -testLanguage en -testRegion US
 ```
 
 ## Build As A macOS `.app` With Xcode
@@ -53,6 +54,55 @@ The debug `.app` is produced under Xcode Derived Data. When using the repo-local
 ```text
 .build/XcodeDerivedData/Build/Products/Debug/CheckMyDisk.app
 ```
+
+## Automatic Updates
+
+CheckMyDisk uses Sparkle 2 to check for updates once per day and also provides a manual **Check for Updates…** button in Settings. Sparkle always asks the user before installing an update; unattended download and installation are disabled.
+
+Updates use two separate kinds of signing:
+
+- Sparkle EdDSA authenticates each update ZIP and prevents a modified archive from being installed.
+- The app bundle uses an ad-hoc macOS code signature (`codesign -s -`). It does not use an Apple Developer certificate and is not notarized by Apple.
+
+Because the app is not notarized, Gatekeeper may warn on the first installation. Use **right-click (or Control-click) > Open** in Finder to confirm that you want to open it.
+
+The update feed and release assets are published at:
+
+- Appcast: `https://mikolatero.github.io/checkmydisk/appcast.xml`
+- ZIP assets: GitHub Release `v<MARKETING_VERSION>`
+- ZIP format: `dist/CheckMyDisk-<MARKETING_VERSION>-<CURRENT_PROJECT_VERSION>.zip`
+
+### One-time Sparkle key setup
+
+Resolve the package and generate a key dedicated to this application:
+
+```sh
+xcodebuild -resolvePackageDependencies -project CheckMyDisk.xcodeproj -scheme CheckMyDisk -derivedDataPath build/DerivedData
+build/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys --account com.checkmydisk.CheckMyDisk
+```
+
+The private EdDSA key remains in the macOS login keychain under the account `com.checkmydisk.CheckMyDisk`. Only the public key belongs in `Config/CheckMyDisk-Info.plist` as `SUPublicEDKey`. Never export or commit the private key.
+
+### GitHub Pages
+
+GitHub Pages must use **Deploy from a branch**, branch `main`, folder `/docs`. The repository includes `docs/.nojekyll`; `Scripts/prepare_update.sh` generates the signed `docs/appcast.xml`. No GitHub Actions workflow is required for this deployment mode.
+
+### Publish a release
+
+Install `gh` and `jq`, then authenticate GitHub CLI if needed:
+
+```sh
+gh auth login -h github.com
+gh auth setup-git
+```
+
+Publish from `main` with a non-empty release description:
+
+```sh
+Scripts/publish_release.sh "Descripción del cambio"
+```
+
+The script increments the patch version and build number only in the application target, runs `xcodebuild test`, builds a universal ad-hoc-signed Release app, creates the ZIP and EdDSA-signed appcast, validates the bundle, commits the intended changes, creates and pushes the annotated tag, and creates or updates the GitHub Release asset. It refuses to publish if tests, packaging, signing, architecture, secret-safety, or appcast validation fails.
 
 ## USB / FireWire / SAT
 

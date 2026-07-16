@@ -296,6 +296,16 @@
         }
       }
     },
+    "Check for Updates…": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar actualizaciones…"
+          }
+        }
+      }
+    },
     "Checking": {
       "localizations": {
         "es": {
@@ -1037,6 +1047,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Informes"
+          }
+        }
+      }
+    },
+    "Software Updates": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualizaciones de software"
           }
         }
       }
