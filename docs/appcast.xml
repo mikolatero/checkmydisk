@@ -3,6 +3,14 @@
     <channel>
         <title>CheckMyDisk</title>
         <item>
+            <title>0.1.2</title>
+            <pubDate>Thu, 16 Jul 2026 15:59:20 +0200</pubDate>
+            <sparkle:version>3</sparkle:version>
+            <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/mikolatero/checkmydisk/releases/download/v0.1.2/CheckMyDisk-0.1.2-3.zip" length="5402907" type="application/octet-stream" sparkle:edSignature="nDwes2Vvf2NrH3YIbiA4v89Ucto6NBUNu1wg+J82uE0FWqI8yO65WJObW/+5RCPwhfnwT4SotazbwBdzVg5jDg=="/>
+        </item>
+        <item>
             <title>0.1.1</title>
             <pubDate>Thu, 16 Jul 2026 15:54:07 +0200</pubDate>
             <sparkle:version>2</sparkle:version>

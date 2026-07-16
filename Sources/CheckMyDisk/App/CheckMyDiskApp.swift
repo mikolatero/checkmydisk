@@ -15,11 +15,13 @@ struct CheckMyDiskApp: App {
             ContentView()
                 .environmentObject(store)
                 .environmentObject(softwareUpdateController)
-                .frame(minWidth: 980, minHeight: 640)
+                .frame(minWidth: 1240, minHeight: 760)
                 .task {
                     store.startMonitoring()
                 }
         }
+        .defaultSize(width: 1280, height: 820)
+        .windowResizability(.contentMinSize)
 
         Settings {
             PreferencesView()
