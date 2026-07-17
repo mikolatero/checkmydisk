@@ -191,6 +191,40 @@ final class HealthEvaluatorTests: XCTestCase {
         """
     }
 
+    // MARK: - Programador de self-tests (SelfTestScheduler)
+
+    func testScheduledNotDueWithoutBaseline() {
+        var settings = AppSettings()
+        settings.scheduledSelfTestsEnabled = true
+        XCTAssertFalse(SelfTestScheduler.isDue(last: nil, intervalDays: 7, now: Date()))
+        XCTAssertNil(SelfTestScheduler.kindDue(settings: settings, lastShort: nil, lastLong: nil, now: Date()))
+    }
+
+    func testScheduledShortDueAfterInterval() {
+        var settings = AppSettings()
+        settings.scheduledSelfTestsEnabled = true
+        settings.shortTestIntervalDays = 7
+        settings.longTestIntervalDays = 0
+        let now = Date()
+        XCTAssertEqual(SelfTestScheduler.kindDue(settings: settings, lastShort: now.addingTimeInterval(-8 * 86_400), lastLong: nil, now: now), "short")
+        XCTAssertNil(SelfTestScheduler.kindDue(settings: settings, lastShort: now.addingTimeInterval(-6 * 86_400), lastLong: nil, now: now))
+    }
+
+    func testScheduledPrefersLongWhenBothDue() {
+        var settings = AppSettings()
+        settings.scheduledSelfTestsEnabled = true
+        settings.shortTestIntervalDays = 7
+        settings.longTestIntervalDays = 30
+        let now = Date()
+        let old = now.addingTimeInterval(-40 * 86_400)
+        XCTAssertEqual(SelfTestScheduler.kindDue(settings: settings, lastShort: old, lastLong: old, now: now), "long")
+    }
+
+    func testScheduledDisabledReturnsNil() {
+        let settings = AppSettings() // scheduledSelfTestsEnabled = false por defecto
+        XCTAssertNil(SelfTestScheduler.kindDue(settings: settings, lastShort: nil, lastLong: nil, now: Date()))
+    }
+
     // MARK: - Fixtures
 
     private var device: SmartDeviceSummary {

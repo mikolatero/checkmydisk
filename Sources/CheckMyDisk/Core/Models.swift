@@ -261,12 +261,16 @@ struct AppSettings: Codable, Equatable {
     var anonymizeReports: Bool = true
     var commandTimeoutSeconds: Double = 30
     var historyRetentionDays: Int = 90
+    var scheduledSelfTestsEnabled: Bool = false
+    var shortTestIntervalDays: Int = 7
+    var longTestIntervalDays: Int = 30
 }
 
 extension AppSettings {
     private enum CodingKeys: String, CodingKey {
         case smartctlMode, customSmartctlPath, refreshIntervalSeconds, notificationsEnabled,
-             anonymizeReports, commandTimeoutSeconds, historyRetentionDays
+             anonymizeReports, commandTimeoutSeconds, historyRetentionDays,
+             scheduledSelfTestsEnabled, shortTestIntervalDays, longTestIntervalDays
     }
 
     init(from decoder: Decoder) throws {
@@ -278,5 +282,8 @@ extension AppSettings {
         anonymizeReports = try container.decodeIfPresent(Bool.self, forKey: .anonymizeReports) ?? true
         commandTimeoutSeconds = try container.decodeIfPresent(Double.self, forKey: .commandTimeoutSeconds) ?? 30
         historyRetentionDays = try container.decodeIfPresent(Int.self, forKey: .historyRetentionDays) ?? 90
+        scheduledSelfTestsEnabled = try container.decodeIfPresent(Bool.self, forKey: .scheduledSelfTestsEnabled) ?? false
+        shortTestIntervalDays = try container.decodeIfPresent(Int.self, forKey: .shortTestIntervalDays) ?? 7
+        longTestIntervalDays = try container.decodeIfPresent(Int.self, forKey: .longTestIntervalDays) ?? 30
     }
 }

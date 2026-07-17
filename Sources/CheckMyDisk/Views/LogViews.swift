@@ -91,6 +91,15 @@ struct SelfTestsView: View {
             .frame(maxWidth: .infinity)
             .background(.quaternary.opacity(0.5))
 
+            if store.settings.scheduledSelfTestsEnabled {
+                Label("Automatic self-tests are enabled in Settings.", systemImage: "clock.arrow.circlepath")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 14)
+                    .padding(.top, 8)
+            }
+
             if store.isSelfTestPolling || snapshot.activeSelfTest?.isRunning == true {
                 SelfTestProgressBanner(
                     status: snapshot.activeSelfTest,

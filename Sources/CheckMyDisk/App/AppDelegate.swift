@@ -10,6 +10,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let softwareUpdateController = SoftwareUpdateController()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Skip background monitoring when the app is only hosting unit tests: the
+        // test host must launch instantly, and spawning smartctl on the machine's
+        // real drives can hang the XCTest runner's connection.
+        guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
         store.startMonitoring()
     }
 

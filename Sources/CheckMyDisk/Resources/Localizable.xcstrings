@@ -1943,6 +1943,76 @@
           }
         }
       }
+    },
+    "Scheduled Self-tests": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-tests programados"
+          }
+        }
+      }
+    },
+    "Run self-tests automatically": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ejecutar self-tests automáticamente"
+          }
+        }
+      }
+    },
+    "Short test every": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test corto cada"
+          }
+        }
+      }
+    },
+    "Full test every": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test completo cada"
+          }
+        }
+      }
+    },
+    "Off": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desactivado"
+          }
+        }
+      }
+    },
+    "Runs in the background; results appear in the Self-tests view.": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se ejecuta en segundo plano; los resultados aparecen en la vista de Self-tests."
+          }
+        }
+      }
+    },
+    "Automatic self-tests are enabled in Settings.": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los self-tests automáticos están activados en Ajustes."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

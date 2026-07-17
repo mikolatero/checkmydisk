@@ -31,6 +31,7 @@ final class DriveStore {
     }
     @ObservationIgnored private let snapshotStore: SnapshotStore?
     @ObservationIgnored private let notifications = NotificationService()
+    @ObservationIgnored private let selfTestScheduler = SelfTestScheduler()
     @ObservationIgnored private lazy var selfTests = SelfTestCoordinator(
         runner: runner,
         refreshAction: { [weak self] in await self?.refresh() },
@@ -183,6 +184,7 @@ final class DriveStore {
             }
         }
         volumes = mappedVolumes
+        await runScheduledSelfTests()
     }
 
     func history(for deviceID: String, since: Date?) async -> [HistoryPoint] {
@@ -222,6 +224,21 @@ final class DriveStore {
     private func latestPersistedSnapshot(_ deviceID: String) async -> DriveSnapshot? {
         guard let snapshotStore else { return nil }
         return try? await snapshotStore.latestSnapshot(deviceID: deviceID)
+    }
+
+    private func runScheduledSelfTests() async {
+        await selfTestScheduler.runDueTests(
+            devices: devices,
+            settings: settings,
+            now: Date(),
+            isRunning: { [weak self] id in
+                self?.snapshots[id]?.activeSelfTest?.isRunning == true || self?.isSelfTestPolling == true
+            },
+            start: { [weak self] device, kind in
+                guard let self else { return }
+                try? await self.runner.startSelfTest(device: device, kind: kind)
+            }
+        )
     }
 
     private func persist(snapshot: DriveSnapshot, assessment: DriveAssessment) {

@@ -66,6 +66,23 @@ struct PreferencesView: View {
                     }
             }
 
+            Section("Scheduled Self-tests") {
+                Toggle("Run self-tests automatically", isOn: $store.settings.scheduledSelfTestsEnabled)
+                LabeledContent("Short test every") {
+                    Stepper(value: $store.settings.shortTestIntervalDays, in: 0...90) {
+                        Text(store.settings.shortTestIntervalDays == 0 ? String(localized: "Off") : String(localized: "\(store.settings.shortTestIntervalDays) days"))
+                    }
+                }
+                LabeledContent("Full test every") {
+                    Stepper(value: $store.settings.longTestIntervalDays, in: 0...365, step: 5) {
+                        Text(store.settings.longTestIntervalDays == 0 ? String(localized: "Off") : String(localized: "\(store.settings.longTestIntervalDays) days"))
+                    }
+                }
+                Text("Runs in the background; results appear in the Self-tests view.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("History") {
                 LabeledContent("Keep history for") {
                     Stepper(value: $store.settings.historyRetentionDays, in: 7...730, step: 7) {
