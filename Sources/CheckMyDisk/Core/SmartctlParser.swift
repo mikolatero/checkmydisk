@@ -8,62 +8,104 @@ enum SmartctlParserError: Error, LocalizedError {
     }
 }
 
-enum SmartctlParser {
-    typealias JSON = [String: Any]
+/// A thin, typed view over smartctl's decoded JSON. smartctl emits values that are
+/// sometimes numbers and sometimes strings, plus deeply-optional nested objects, so
+/// this wraps `Any?` with safe, chainable accessors instead of scattered `as?`
+/// casts. Value extraction delegates to `SmartctlParser`'s primitives so the
+/// number-or-string handling stays in one place.
+struct SmartJSON {
+    let raw: Any?
 
+    init(_ raw: Any?) {
+        self.raw = raw
+    }
+
+    static func object(from data: Data) throws -> SmartJSON {
+        let value = try JSONSerialization.jsonObject(with: data)
+        guard value is [String: Any] else { throw SmartctlParserError.invalidJSON }
+        return SmartJSON(value)
+    }
+
+    /// Child by key; an empty `SmartJSON` when this is not an object or the key is
+    /// absent, so navigation can be chained without intermediate `as?` casts.
+    subscript(_ key: String) -> SmartJSON {
+        SmartJSON((raw as? [String: Any])?[key])
+    }
+
+    var exists: Bool { raw != nil }
+
+    /// Array of objects (a smartctl "table"/"pages"); empty when not an object array.
+    var objects: [SmartJSON] {
+        (raw as? [[String: Any]])?.map(SmartJSON.init) ?? []
+    }
+
+    /// Array of arbitrary values (e.g. the SCT temperature table of numbers/nulls).
+    var values: [SmartJSON] {
+        (raw as? [Any])?.map(SmartJSON.init) ?? []
+    }
+
+    var bool: Bool? { raw as? Bool }
+    var int: Int? { SmartctlParser.int(raw) }
+    var uint: UInt64? { SmartctlParser.uint(raw) }
+    var string: String { SmartctlParser.string(raw) }
+    func string(fallback: String) -> String { SmartctlParser.string(raw, fallback: fallback) }
+    var optionalString: String? { SmartctlParser.optionalString(raw) }
+    var smartctlString: String { SmartctlParser.smartctlString(raw) }
+    func smartctlString(fallback: String) -> String { SmartctlParser.smartctlString(raw, fallback: fallback) }
+}
+
+enum SmartctlParser {
     static func parseScan(_ data: Data) throws -> [SmartDeviceSummary] {
-        let root = try object(from: data)
-        let devices = root["devices"] as? [[String: Any]] ?? []
-        return devices.map {
+        let root = try SmartJSON.object(from: data)
+        return root["devices"].objects.map {
             SmartDeviceSummary(
-                name: string($0["name"]),
-                infoName: string($0["info_name"]),
-                type: string($0["type"]),
-                protocolName: string($0["protocol"])
+                name: $0["name"].string,
+                infoName: $0["info_name"].string,
+                type: $0["type"].string,
+                protocolName: $0["protocol"].string
             )
         }
     }
 
     static func parseSnapshot(_ data: Data, fallbackDevice: SmartDeviceSummary, exitStatus: SmartctlExitStatus? = nil) throws -> DriveSnapshot {
-        let root = try object(from: data)
-        let deviceRoot = root["device"] as? JSON
+        let root = try SmartJSON.object(from: data)
+        let deviceRoot = root["device"]
         let device = SmartDeviceSummary(
-            name: string(deviceRoot?["name"], fallback: fallbackDevice.name),
-            infoName: string(deviceRoot?["info_name"], fallback: fallbackDevice.infoName),
-            type: string(deviceRoot?["type"], fallback: fallbackDevice.type),
-            protocolName: string(deviceRoot?["protocol"], fallback: fallbackDevice.protocolName)
+            name: deviceRoot["name"].string(fallback: fallbackDevice.name),
+            infoName: deviceRoot["info_name"].string(fallback: fallbackDevice.infoName),
+            type: deviceRoot["type"].string(fallback: fallbackDevice.type),
+            protocolName: deviceRoot["protocol"].string(fallback: fallbackDevice.protocolName)
         )
-        let smartctlRoot = root["smartctl"] as? JSON
-        let messages = (smartctlRoot?["messages"] as? [[String: Any]] ?? []).map {
-            SmartMessage(severity: string($0["severity"]), text: string($0["string"]))
+        let messages = root["smartctl"]["messages"].objects.map {
+            SmartMessage(severity: $0["severity"].string, text: $0["string"].string)
         }
 
-        let nvme = parseNVMe(root["nvme_smart_health_information_log"] as? JSON)
-        var attributes = parseATAAttributes(root["ata_smart_attributes"] as? JSON)
+        let nvme = parseNVMe(root["nvme_smart_health_information_log"])
+        var attributes = parseATAAttributes(root["ata_smart_attributes"])
         if attributes.isEmpty, let nvme {
             attributes = nvmeAttributes(from: nvme)
         }
 
-        var errorLog = parseErrors(root["ata_smart_error_log"] as? JSON)
-        errorLog.append(contentsOf: parseNVMeErrorLog(root["nvme_error_information_log"] as? JSON))
+        var errorLog = parseErrors(root["ata_smart_error_log"])
+        errorLog.append(contentsOf: parseNVMeErrorLog(root["nvme_error_information_log"]))
 
-        var statistics = parseDeviceStatistics(root["ata_device_statistics"] as? JSON)
-        statistics.append(contentsOf: parsePhyCounters(root["sata_phy_event_counters"] as? JSON))
+        var statistics = parseDeviceStatistics(root["ata_device_statistics"])
+        statistics.append(contentsOf: parsePhyCounters(root["sata_phy_event_counters"]))
 
-        let temperatureRoot = root["temperature"] as? JSON
+        let temperature = root["temperature"]
 
         var snapshot = DriveSnapshot(
             device: device,
-            checkedAt: parseDate(root["local_time"] as? JSON) ?? Date(),
-            modelName: string(root["model_name"], fallback: string(root["device_model"], fallback: device.displayName)),
-            serialNumber: optionalString(root["serial_number"]),
-            firmwareVersion: optionalString(root["firmware_version"]),
-            userCapacityBytes: uint((root["user_capacity"] as? JSON)?["bytes"]),
+            checkedAt: parseDate(root["local_time"]) ?? Date(),
+            modelName: root["model_name"].string(fallback: root["device_model"].string(fallback: device.displayName)),
+            serialNumber: root["serial_number"].optionalString,
+            firmwareVersion: root["firmware_version"].optionalString,
+            userCapacityBytes: root["user_capacity"]["bytes"].uint,
             sectorSize: parseSectorSize(root),
-            smartStatusPassed: (root["smart_status"] as? JSON)?["passed"] as? Bool,
-            temperature: int(temperatureRoot?["current"]) ?? nvme?.temperature,
-            powerOnHours: uint((root["power_on_time"] as? JSON)?["hours"]) ?? nvme?.powerOnHours,
-            powerCycles: uint(root["power_cycle_count"]) ?? nvme?.powerCycles,
+            smartStatusPassed: root["smart_status"]["passed"].bool,
+            temperature: temperature["current"].int ?? nvme?.temperature,
+            powerOnHours: root["power_on_time"]["hours"].uint ?? nvme?.powerOnHours,
+            powerCycles: root["power_cycle_count"].uint ?? nvme?.powerCycles,
             nvme: nvme,
             attributes: attributes,
             errorLog: errorLog,
@@ -73,24 +115,24 @@ enum SmartctlParser {
             messages: messages
         )
         snapshot.exitStatus = exitStatus
-        snapshot.rotationRate = int(root["rotation_rate"])
-        snapshot.formFactor = optionalString((root["form_factor"] as? JSON)?["name"])
-        snapshot.interfaceSpeed = parseInterfaceSpeed(root["interface_speed"] as? JSON)
-        snapshot.ataVersion = optionalString((root["ata_version"] as? JSON)?["string"] ?? root["ata_version"])
-        snapshot.sataVersion = optionalString((root["sata_version"] as? JSON)?["string"] ?? root["sata_version"])
-        snapshot.nvmeVersion = optionalString((root["nvme_version"] as? JSON)?["string"] ?? root["nvme_version"])
-        snapshot.wwn = parseWWN(root["wwn"] as? JSON)
-        snapshot.trimSupported = (root["trim"] as? JSON)?["supported"] as? Bool
-        snapshot.temperatureLifetimeMin = int(temperatureRoot?["lifetime_min"])
-        snapshot.temperatureLifetimeMax = int(temperatureRoot?["lifetime_max"])
-        snapshot.sctTemperatureHistory = parseSCTTemperatureHistory(root["ata_sct_temperature_history"] as? JSON)
+        snapshot.rotationRate = root["rotation_rate"].int
+        snapshot.formFactor = root["form_factor"]["name"].optionalString
+        snapshot.interfaceSpeed = parseInterfaceSpeed(root["interface_speed"])
+        snapshot.ataVersion = optionalString(root["ata_version"]["string"].raw ?? root["ata_version"].raw)
+        snapshot.sataVersion = optionalString(root["sata_version"]["string"].raw ?? root["sata_version"].raw)
+        snapshot.nvmeVersion = optionalString(root["nvme_version"]["string"].raw ?? root["nvme_version"].raw)
+        snapshot.wwn = parseWWN(root["wwn"])
+        snapshot.trimSupported = root["trim"]["supported"].bool
+        snapshot.temperatureLifetimeMin = temperature["lifetime_min"].int
+        snapshot.temperatureLifetimeMax = temperature["lifetime_max"].int
+        snapshot.sctTemperatureHistory = parseSCTTemperatureHistory(root["ata_sct_temperature_history"])
         return snapshot
     }
 
-    private static func parseInterfaceSpeed(_ root: JSON?) -> String? {
-        guard let root else { return nil }
-        let current = optionalString((root["current"] as? JSON)?["string"])
-        let max = optionalString((root["max"] as? JSON)?["string"])
+    private static func parseInterfaceSpeed(_ root: SmartJSON) -> String? {
+        guard root.exists else { return nil }
+        let current = root["current"]["string"].optionalString
+        let max = root["max"]["string"].optionalString
         switch (current, max) {
         case let (current?, max?) where current == max: return current
         case let (current?, max?): return "\(current) (max \(max))"
@@ -100,168 +142,153 @@ enum SmartctlParser {
         }
     }
 
-    private static func parseWWN(_ root: JSON?) -> String? {
-        guard let root, let naa = int(root["naa"]), let oui = int(root["oui"]), let id = uint(root["id"]) else { return nil }
+    private static func parseWWN(_ root: SmartJSON) -> String? {
+        guard root.exists, let naa = root["naa"].int, let oui = root["oui"].int, let id = root["id"].uint else { return nil }
         return String(format: "%X %06X %09llX", naa, oui, id)
     }
 
-    private static func parseSCTTemperatureHistory(_ root: JSON?) -> SCTTemperatureHistory? {
-        guard let root, let table = root["table"] as? [Any] else { return nil }
-        let interval = int(root["logging_interval_minutes"]) ?? int(root["sampling_period_minutes"]) ?? 1
-        let temperatures = table.map { int($0) }
+    private static func parseSCTTemperatureHistory(_ root: SmartJSON) -> SCTTemperatureHistory? {
+        guard root.exists, root["table"].raw is [Any] else { return nil }
+        let interval = root["logging_interval_minutes"].int ?? root["sampling_period_minutes"].int ?? 1
+        let temperatures = root["table"].values.map { $0.int }
         guard temperatures.contains(where: { $0 != nil }) else { return nil }
         return SCTTemperatureHistory(intervalMinutes: interval, temperatures: temperatures)
     }
 
-    private static func parsePhyCounters(_ root: JSON?) -> [DeviceStatistic] {
-        guard let table = root?["table"] as? [[String: Any]] else { return [] }
-        return table.map {
-            DeviceStatistic(section: "SATA Phy Event Counters", name: string($0["name"]), value: string($0["value"]))
+    private static func parsePhyCounters(_ root: SmartJSON) -> [DeviceStatistic] {
+        root["table"].objects.map {
+            DeviceStatistic(section: "SATA Phy Event Counters", name: $0["name"].string, value: $0["value"].string)
         }
     }
 
-    private static func parseNVMeErrorLog(_ root: JSON?) -> [SmartErrorEntry] {
-        guard let table = root?["table"] as? [[String: Any]] else { return [] }
-        return table.enumerated().map { index, row in
+    private static func parseNVMeErrorLog(_ root: SmartJSON) -> [SmartErrorEntry] {
+        root["table"].objects.enumerated().map { index, row in
             SmartErrorEntry(
-                id: int(row["error_count"]) ?? index + 1,
+                id: row["error_count"].int ?? index + 1,
                 lifetimeHours: nil,
-                errors: string((row["status_field"] as? JSON)?["string"], fallback: "NVMe error"),
-                priorCommand: int(row["command_id"]).map { String(format: "command id 0x%X", $0) } ?? "-",
-                lba: optionalString((row["lba"] as? JSON)?["value"] ?? row["lba"])
+                errors: row["status_field"]["string"].string(fallback: "NVMe error"),
+                priorCommand: row["command_id"].int.map { String(format: "command id 0x%X", $0) } ?? "-",
+                lba: optionalString(row["lba"]["value"].raw ?? row["lba"].raw)
             )
         }
     }
 
-    private static func object(from data: Data) throws -> JSON {
-        guard let root = try JSONSerialization.jsonObject(with: data) as? JSON else {
-            throw SmartctlParserError.invalidJSON
-        }
-        return root
-    }
-
-    private static func parseDate(_ root: JSON?) -> Date? {
-        guard let time = int(root?["time_t"]) else { return nil }
+    private static func parseDate(_ root: SmartJSON) -> Date? {
+        guard let time = root["time_t"].int else { return nil }
         return Date(timeIntervalSince1970: TimeInterval(time))
     }
 
-    private static func parseSectorSize(_ root: JSON) -> String? {
-        if let size = root["logical_block_size"] {
-            return "\(string(size)) bytes"
+    private static func parseSectorSize(_ root: SmartJSON) -> String? {
+        if root["logical_block_size"].exists {
+            return "\(root["logical_block_size"].string) bytes"
         }
-        if let block = root["physical_block_size"] {
-            return "\(string(block)) bytes"
+        if root["physical_block_size"].exists {
+            return "\(root["physical_block_size"].string) bytes"
         }
         return nil
     }
 
-    private static func parseNVMe(_ root: JSON?) -> NVMeHealthLog? {
-        guard let root else { return nil }
+    private static func parseNVMe(_ root: SmartJSON) -> NVMeHealthLog? {
+        guard root.exists else { return nil }
         var log = NVMeHealthLog(
-            criticalWarning: int(root["critical_warning"]),
-            temperature: int(root["temperature"]),
-            availableSpare: int(root["available_spare"]),
-            availableSpareThreshold: int(root["available_spare_threshold"]),
-            percentageUsed: int(root["percentage_used"]),
-            dataUnitsRead: uint(root["data_units_read"]),
-            dataUnitsWritten: uint(root["data_units_written"]),
-            hostReads: uint(root["host_reads"]),
-            hostWrites: uint(root["host_writes"]),
-            controllerBusyTime: uint(root["controller_busy_time"]),
-            powerCycles: uint(root["power_cycles"]),
-            powerOnHours: uint(root["power_on_hours"]),
-            unsafeShutdowns: uint(root["unsafe_shutdowns"]),
-            mediaErrors: uint(root["media_errors"]),
-            errorLogEntries: uint(root["num_err_log_entries"])
+            criticalWarning: root["critical_warning"].int,
+            temperature: root["temperature"].int,
+            availableSpare: root["available_spare"].int,
+            availableSpareThreshold: root["available_spare_threshold"].int,
+            percentageUsed: root["percentage_used"].int,
+            dataUnitsRead: root["data_units_read"].uint,
+            dataUnitsWritten: root["data_units_written"].uint,
+            hostReads: root["host_reads"].uint,
+            hostWrites: root["host_writes"].uint,
+            controllerBusyTime: root["controller_busy_time"].uint,
+            powerCycles: root["power_cycles"].uint,
+            powerOnHours: root["power_on_hours"].uint,
+            unsafeShutdowns: root["unsafe_shutdowns"].uint,
+            mediaErrors: root["media_errors"].uint,
+            errorLogEntries: root["num_err_log_entries"].uint
         )
-        if let sensors = root["temperature_sensors"] as? [Any] {
-            let values = sensors.compactMap { int($0) }
-            log.temperatureSensors = values.isEmpty ? nil : values
-        }
-        log.warningTempTime = int(root["warning_temp_time"])
-        log.criticalCompTime = int(root["critical_comp_time"])
+        let sensors = root["temperature_sensors"].values.compactMap { $0.int }
+        log.temperatureSensors = sensors.isEmpty ? nil : sensors
+        log.warningTempTime = root["warning_temp_time"].int
+        log.criticalCompTime = root["critical_comp_time"].int
         return log
     }
 
-    private static func parseATAAttributes(_ root: JSON?) -> [SmartAttribute] {
-        guard let table = root?["table"] as? [[String: Any]] else { return [] }
-        return table.compactMap { row in
-            guard let id = int(row["id"]) else { return nil }
-            let raw = row["raw"] as? JSON
-            let flags = row["flags"] as? JSON
-            let current = int(row["value"])
-            let threshold = int(row["thresh"])
+    private static func parseATAAttributes(_ root: SmartJSON) -> [SmartAttribute] {
+        root["table"].objects.compactMap { row in
+            guard let id = row["id"].int else { return nil }
+            let raw = row["raw"]
+            let current = row["value"].int
+            let threshold = row["thresh"].int
             let percent = normalizedPercent(current: current, threshold: threshold)
-            let state = stateForAttribute(id: id, current: current, threshold: threshold, rawValue: rawValueNumber(raw))
+            let state = stateForAttribute(id: id, current: current, threshold: threshold, rawValue: raw["value"].uint)
             return SmartAttribute(
                 id: id,
-                name: string(row["name"]),
-                type: string(flags?["prefailure"] as? Bool == true ? "pre-fail" : "life-span"),
+                name: row["name"].string,
+                type: row["flags"]["prefailure"].bool == true ? "pre-fail" : "life-span",
                 rawValue: rawValueString(raw),
-                prettyValue: optionalString(raw?["string"]),
+                prettyValue: raw["string"].optionalString,
                 current: current,
-                worst: int(row["worst"]),
+                worst: row["worst"].int,
                 threshold: threshold,
-                whenFailed: optionalString(row["when_failed"]),
+                whenFailed: row["when_failed"].optionalString,
                 percent: percent,
                 status: state
             )
         }
     }
 
-    private static func parseErrors(_ root: JSON?) -> [SmartErrorEntry] {
-        guard let table = root?["table"] as? [[String: Any]] else { return [] }
-        return table.enumerated().map { index, row in
+    private static func parseErrors(_ root: SmartJSON) -> [SmartErrorEntry] {
+        root["table"].objects.enumerated().map { index, row in
             SmartErrorEntry(
-                id: int(row["error_number"]) ?? index + 1,
-                lifetimeHours: int(row["lifetime_hours"]),
-                errors: string(row["error_description"], fallback: string(row["error"])),
-                priorCommand: string(row["prior_command"]),
-                lba: optionalString(row["lba"])
+                id: row["error_number"].int ?? index + 1,
+                lifetimeHours: row["lifetime_hours"].int,
+                errors: row["error_description"].string(fallback: row["error"].string),
+                priorCommand: row["prior_command"].string,
+                lba: row["lba"].optionalString
             )
         }
     }
 
-    private static func parseSelfTests(_ root: JSON) -> [SmartSelfTestEntry] {
-        let logs = [
-            (root["ata_smart_self_test_log"] as? JSON)?["standard"] as? JSON,
-            root["nvme_self_test_log"] as? JSON
-        ].compactMap { $0 }
-        let table = logs.compactMap { $0["table"] as? [[String: Any]] }.flatMap { $0 }
+    private static func parseSelfTests(_ root: SmartJSON) -> [SmartSelfTestEntry] {
+        let logs = [root["ata_smart_self_test_log"]["standard"], root["nvme_self_test_log"]]
+        let table = logs.flatMap { $0["table"].objects }
         return table.enumerated().map { index, row in
-            let statusRoot = row["status"] as? JSON
-            let status = string(statusRoot?["string"], fallback: string(row["status"], fallback: smartctlString(row["self_test_result"])))
+            let statusRoot = row["status"]
+            let status = statusRoot["string"].string(fallback: row["status"].string(fallback: row["self_test_result"].smartctlString))
             return SmartSelfTestEntry(
-                id: int(row["num"]) ?? index + 1,
-                lifetimeHours: int(row["lifetime_hours"]) ?? int(row["power_on_hours"]),
-                testType: smartctlString(row["type"], fallback: smartctlString(row["self_test_code"])),
+                id: row["num"].int ?? index + 1,
+                lifetimeHours: row["lifetime_hours"].int ?? row["power_on_hours"].int,
+                testType: row["type"].smartctlString(fallback: row["self_test_code"].smartctlString),
                 status: status,
-                remainingPercent: int(statusRoot?["remaining_percent"]),
-                lbaOfFirstError: optionalString(row["lba_first_error"] ?? (row["lba"] as? JSON)?["value"])
+                remainingPercent: statusRoot["remaining_percent"].int,
+                lbaOfFirstError: optionalString(row["lba_first_error"].raw ?? row["lba"]["value"].raw)
             )
         }
     }
 
-    private static func parseActiveSelfTest(_ root: JSON) -> ActiveSelfTestStatus? {
-        if let ataSelfTest = ((root["ata_smart_data"] as? JSON)?["self_test"] as? JSON) {
-            let status = ataSelfTest["status"] as? JSON
-            let remaining = int(status?["remaining_percent"])
-            let title = smartctlString(status, fallback: smartctlString(ataSelfTest["status"]))
-            let polling = ataSelfTest["polling_minutes"] as? JSON
+    private static func parseActiveSelfTest(_ root: SmartJSON) -> ActiveSelfTestStatus? {
+        let ataSelfTest = root["ata_smart_data"]["self_test"]
+        if ataSelfTest.exists {
+            let status = ataSelfTest["status"]
+            let remaining = status["remaining_percent"].int
+            let title = status.smartctlString(fallback: ataSelfTest["status"].smartctlString)
+            let polling = ataSelfTest["polling_minutes"]
             if !title.isEmpty || remaining != nil {
                 return ActiveSelfTestStatus(
                     title: title.isEmpty ? "Self-test status unavailable" : title,
                     progressPercent: remaining.map { max(0, min(100, 100 - $0)) },
                     remainingPercent: remaining,
-                    estimatedMinutesShort: int(polling?["short"]),
-                    estimatedMinutesExtended: int(polling?["extended"])
+                    estimatedMinutesShort: polling["short"].int,
+                    estimatedMinutesExtended: polling["extended"].int
                 )
             }
         }
 
-        if let nvmeLog = root["nvme_self_test_log"] as? JSON {
-            let status = smartctlString(nvmeLog["current_self_test_operation"])
-            let completion = int(nvmeLog["current_self_test_completion_percent"])
+        let nvmeLog = root["nvme_self_test_log"]
+        if nvmeLog.exists {
+            let status = nvmeLog["current_self_test_operation"].smartctlString
+            let completion = nvmeLog["current_self_test_completion_percent"].int
             if !status.isEmpty || completion != nil {
                 return ActiveSelfTestStatus(
                     title: status.isEmpty ? "NVMe self-test in progress" : status,
@@ -276,13 +303,11 @@ enum SmartctlParser {
         return nil
     }
 
-    private static func parseDeviceStatistics(_ root: JSON?) -> [DeviceStatistic] {
-        guard let pages = root?["pages"] as? [[String: Any]] else { return [] }
-        return pages.flatMap { page -> [DeviceStatistic] in
-            let section = string(page["name"], fallback: "Device Statistics")
-            let table = page["table"] as? [[String: Any]] ?? []
-            return table.map {
-                DeviceStatistic(section: section, name: string($0["name"]), value: string($0["value"]))
+    private static func parseDeviceStatistics(_ root: SmartJSON) -> [DeviceStatistic] {
+        root["pages"].objects.flatMap { page -> [DeviceStatistic] in
+            let section = page["name"].string(fallback: "Device Statistics")
+            return page["table"].objects.map {
+                DeviceStatistic(section: section, name: $0["name"].string, value: $0["value"].string)
             }
         }
     }
@@ -374,13 +399,9 @@ enum SmartctlParser {
         return max(0, min(100, 100 - max(0, temperature - 35) * 2))
     }
 
-    private static func rawValueNumber(_ raw: JSON?) -> UInt64? {
-        uint(raw?["value"])
-    }
-
-    private static func rawValueString(_ raw: JSON?) -> String {
-        if let string = optionalString(raw?["string"]) { return string }
-        if let value = raw?["value"] { return string(value) }
+    private static func rawValueString(_ raw: SmartJSON) -> String {
+        if let string = raw["string"].optionalString { return string }
+        if raw["value"].exists { return raw["value"].string }
         return "-"
     }
 
