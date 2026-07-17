@@ -78,6 +78,10 @@ struct HistoryView: View {
             .padding(16)
         }
         .task(id: "\(snapshot.device.id)|\(range.rawValue)") {
+            // Reset per (device, range) so a switch shows "Loading…" again instead
+            // of the previous selection's data or a premature "not enough history".
+            hasLoaded = false
+            points = []
             points = await store.history(for: snapshot.device.id, since: range.since)
             hasLoaded = true
         }

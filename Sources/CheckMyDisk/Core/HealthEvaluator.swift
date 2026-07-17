@@ -152,9 +152,25 @@ enum HealthEvaluator {
         problems.map(\.state).max { $0.severity < $1.severity }
     }
 
+    /// Temperature-derived SMART attributes are surfaced through the dedicated
+    /// temperature gauge and are already evaluated as problems when they cross the
+    /// thresholds. They must stay out of the overall-health "worst attribute" floor
+    /// so a merely-warm drive is not penalized twice (a healthy NVMe at 50 °C would
+    /// otherwise report ~70% health with no real issue).
+    private static func isTemperatureAttribute(_ attribute: SmartAttribute) -> Bool {
+        if attribute.isSynthetic == true {
+            return attribute.name.localizedCaseInsensitiveContains("Temperature")
+        }
+        // 190 Airflow_Temperature_Cel, 194 Temperature_Celsius.
+        return attribute.id == 190 || attribute.id == 194
+    }
+
     private static func calculateHealth(snapshot: DriveSnapshot, problems: [HealthProblem]) -> Int {
         if snapshot.smartStatusPassed == false { return 0 }
-        let worstAttribute = snapshot.attributes.compactMap(\.percent).min() ?? 100
+        let worstAttribute = snapshot.attributes
+            .filter { !isTemperatureAttribute($0) }
+            .compactMap(\.percent)
+            .min() ?? 100
         let penalty = problems.reduce(0) { sum, problem in
             switch problem.state {
             case .failed: sum + 60

@@ -41,6 +41,31 @@ final class HealthEvaluatorTests: XCTestCase {
         XCTAssertTrue(assessment.problems.contains { $0.state == .warning })
     }
 
+    /// Regresión: la temperatura tiene su propio medidor y su penalización aparte;
+    /// un NVMe sano simplemente templado (50 °C) no debe hundir el "Health %".
+    func testWarmButHealthyNVMeKeepsFullHealth() throws {
+        let json = """
+        {
+          "model_name": "Healthy NVMe",
+          "smart_status": {"passed": true},
+          "nvme_smart_health_information_log": {
+            "critical_warning": 0,
+            "temperature": 50,
+            "available_spare": 100,
+            "available_spare_threshold": 10,
+            "percentage_used": 0,
+            "media_errors": 0,
+            "num_err_log_entries": 0
+          }
+        }
+        """
+        let snapshot = try SmartctlParser.parseSnapshot(Data(json.utf8), fallbackDevice: device)
+        let assessment = HealthEvaluator.evaluate(snapshot)
+        XCTAssertEqual(assessment.smartStatus, .ok)
+        XCTAssertTrue(assessment.problems.isEmpty)
+        XCTAssertEqual(assessment.overallHealth, 100)
+    }
+
     // MARK: - Exit status de smartctl
 
     func testDiskFailingExitBitBecomesFailedProblem() throws {

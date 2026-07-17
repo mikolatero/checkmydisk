@@ -150,6 +150,57 @@ final class ParserExtendedTests: XCTestCase {
         XCTAssertEqual(DriveUsageMetrics.bytesRead(for: snapshot), 1_000_000 * 512)
     }
 
+    func testBytesWrittenFromNVMeDataUnits() throws {
+        let json = """
+        {
+          "model_name": "NVMe Drive",
+          "nvme_smart_health_information_log": {
+            "critical_warning": 0,
+            "temperature": 40,
+            "available_spare": 100,
+            "available_spare_threshold": 10,
+            "percentage_used": 1,
+            "data_units_read": 1000,
+            "data_units_written": 2000
+          }
+        }
+        """
+        let snapshot = try SmartctlParser.parseSnapshot(Data(json.utf8), fallbackDevice: device)
+        // NVMe data units are reported in multiples of 1000 * 512 bytes.
+        XCTAssertEqual(DriveUsageMetrics.bytesWritten(for: snapshot), 2000 * 512_000)
+        XCTAssertEqual(DriveUsageMetrics.bytesRead(for: snapshot), 1000 * 512_000)
+    }
+
+    func testBytesWrittenFromATAAttribute() throws {
+        let json = """
+        {
+          "model_name": "SSD",
+          "logical_block_size": 512,
+          "ata_smart_attributes": {
+            "table": [
+              {
+                "id": 241,
+                "name": "Total_LBAs_Written",
+                "value": 100,
+                "thresh": 0,
+                "flags": {"prefailure": false},
+                "raw": {"value": 2000000, "string": "2000000"}
+              }
+            ]
+          }
+        }
+        """
+        let snapshot = try SmartctlParser.parseSnapshot(Data(json.utf8), fallbackDevice: device)
+        XCTAssertEqual(DriveUsageMetrics.bytesWritten(for: snapshot), 2_000_000 * 512)
+    }
+
+    func testWholeDiskNameStripsPartitionAndSlice() {
+        XCTAssertEqual(VolumeInfoProvider.wholeDiskName("disk3s1s1"), "disk3")
+        XCTAssertEqual(VolumeInfoProvider.wholeDiskName("disk0"), "disk0")
+        XCTAssertEqual(VolumeInfoProvider.wholeDiskName("disk12s4"), "disk12")
+        XCTAssertEqual(VolumeInfoProvider.wholeDiskName("notadisk"), "notadisk")
+    }
+
     private let extendedATAJSON = """
     {
       "model_name": "WDC WD40EFRX",
