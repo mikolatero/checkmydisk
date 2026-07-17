@@ -227,7 +227,8 @@ struct StatusBadge: View {
     let text: String
 
     var body: some View {
-        Text(text)
+        Label(text, systemImage: stateIcon(state))
+            .labelStyle(.titleAndIcon)
             .font(.caption.weight(.black))
             .foregroundStyle(.white)
             .padding(.horizontal, 9)

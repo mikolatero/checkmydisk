@@ -5,129 +5,98 @@ struct HealthIndicatorsView: View {
     @State private var search = ""
     @State private var typeFilter = "Any Type"
     @State private var statusFilter = "Any Status"
+    @State private var sortOrder = [KeyPathComparator(\SmartAttribute.id)]
 
-    private var filtered: [SmartAttribute] {
+    private var rows: [SmartAttribute] {
         snapshot.attributes.filter { attribute in
             (search.isEmpty || attribute.name.localizedCaseInsensitiveContains(search) || "\(attribute.id)".contains(search)) &&
             (typeFilter == "Any Type" || attribute.type.localizedCaseInsensitiveContains(typeFilter)) &&
             (statusFilter == "Any Status" || attribute.status.rawValue == statusFilter)
         }
+        .sorted(using: sortOrder)
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 12) {
-                Picker("", selection: $typeFilter) {
-                    Text("Any Type").tag("Any Type")
-                    Text("Pre-Fail").tag("pre-fail")
-                    Text("Life-Span").tag("life-span")
+            filterBar
+            Table(rows, sortOrder: $sortOrder) {
+                TableColumn("ID", value: \.id) { attribute in
+                    Text(String(format: "%03d", attribute.id))
+                        .font(.system(.body, design: .monospaced))
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .fixedSize()
+                .width(min: 44, ideal: 52)
 
-                Picker("", selection: $statusFilter) {
-                    Text("Any Status").tag("Any Status")
-                    ForEach(DriveHealthState.allCases, id: \.rawValue) { state in
-                        Text(state.rawValue).tag(state.rawValue)
+                TableColumn("Attribute", value: \.name) { attribute in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(attribute.name).fontWeight(.semibold)
+                        Text(attribute.type).font(.caption).foregroundStyle(.secondary)
+                        if let whenFailed = attribute.whenFailed, !whenFailed.isEmpty {
+                            Label(String(localized: "Failed: \(whenFailed)"), systemImage: "exclamationmark.octagon.fill")
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                        }
                     }
                 }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .fixedSize()
+                .width(min: 160, ideal: 240)
 
-                Spacer(minLength: 12)
-                TextField("Search", text: $search)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(minWidth: 120, maxWidth: 220)
-            }
-            .padding(10)
-            .background(.quaternary.opacity(0.5))
-
-            // Mismo espaciado, anchos y padding acumulado (10 del LazyVStack +
-            // 10 de la fila) que AttributeRow para que las columnas cuadren.
-            HStack(alignment: .center, spacing: 10) {
-                header("id", width: 48)
-                header("name", width: 260)
-                header("raw value", width: 120, alignment: .trailing)
-                header("value", width: 160, alignment: .trailing)
-                header("status", width: 220)
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 5)
-            .background(.quaternary)
-
-            ScrollView {
-                LazyVStack(spacing: 1) {
-                    ForEach(filtered) { attribute in
-                        AttributeRow(attribute: attribute)
-                    }
+                TableColumn("Raw value") { attribute in
+                    Text(attribute.prettyValue ?? attribute.rawValue)
+                        .textSelection(.enabled)
                 }
-                .padding(10)
-            }
-        }
-    }
 
-    private func header(_ text: String, width: CGFloat, alignment: Alignment = .leading) -> some View {
-        Text(text)
-            .font(.caption.weight(.bold))
-            .textCase(.lowercase)
-            .foregroundStyle(.secondary)
-            .frame(width: width, alignment: alignment)
-    }
-}
-
-struct AttributeRow: View {
-    let attribute: SmartAttribute
-
-    var body: some View {
-        HStack(alignment: .center, spacing: 10) {
-            Text("\(attribute.id)")
-                .frame(width: 48, alignment: .leading)
-                .font(.system(.body, design: .monospaced).weight(.bold))
-            VStack(alignment: .leading, spacing: 2) {
-                Text(attribute.name)
-                    .fontWeight(.bold)
-                Text("Type: \(attribute.type)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                if let whenFailed = attribute.whenFailed, !whenFailed.isEmpty {
-                    Label(String(localized: "Failed: \(whenFailed)"), systemImage: "exclamationmark.octagon.fill")
+                TableColumn("Cur / Worst / Thr") { attribute in
+                    Text("\(attribute.current.map(String.init) ?? "-") / \(attribute.worst.map(String.init) ?? "-") / \(attribute.threshold.map(String.init) ?? "-")")
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(.secondary)
+                }
+
+                TableColumn("Health") { attribute in
+                    HStack(spacing: 6) {
+                        ProgressView(value: Double(attribute.percent ?? 0), total: 100)
+                            .tint(stateColor(attribute.status))
+                        Text(attribute.percent.map { "\($0)%" } ?? "-")
+                            .font(.caption)
+                            .monospacedDigit()
+                    }
+                }
+                .width(min: 120, ideal: 160)
+
+                TableColumn("Status", value: \.status.severity) { attribute in
+                    Label(attribute.status.rawValue, systemImage: stateIcon(attribute.status))
+                        .foregroundStyle(stateColor(attribute.status))
+                }
+                .width(min: 96, ideal: 116)
+            }
+        }
+    }
+
+    private var filterBar: some View {
+        HStack(spacing: 12) {
+            Picker("", selection: $typeFilter) {
+                Text("Any Type").tag("Any Type")
+                Text("Pre-Fail").tag("pre-fail")
+                Text("Life-Span").tag("life-span")
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .fixedSize()
+
+            Picker("", selection: $statusFilter) {
+                Text("Any Status").tag("Any Status")
+                ForEach(DriveHealthState.allCases, id: \.rawValue) { state in
+                    Text(state.rawValue).tag(state.rawValue)
                 }
             }
-            .frame(width: 260, alignment: .leading)
-            Text(attribute.prettyValue ?? attribute.rawValue)
-                .frame(width: 120, alignment: .trailing)
-                .textSelection(.enabled)
-            VStack(alignment: .trailing, spacing: 1) {
-                Text("Current: \(attribute.current.map(String.init) ?? "-")")
-                Text("Worst: \(attribute.worst.map(String.init) ?? "-")")
-                Text("Threshold: \(attribute.threshold.map(String.init) ?? "-")")
-            }
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .frame(width: 160, alignment: .trailing)
-            HStack {
-                ProgressView(value: Double(attribute.percent ?? 0), total: 100)
-                    .tint(stateColor(attribute.status))
-                    .frame(width: 120)
-                Text(attribute.percent.map { "\($0)%" } ?? "-")
-                    .frame(width: 42, alignment: .trailing)
-                Text(attribute.status.rawValue)
-                    .fontWeight(.bold)
-                    .foregroundStyle(stateColor(attribute.status))
-                    .frame(width: 70, alignment: .leading)
-            }
-            .frame(width: 220, alignment: .leading)
-            Spacer()
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .fixedSize()
+
+            Spacer(minLength: 12)
+            TextField("Search", text: $search)
+                .textFieldStyle(.roundedBorder)
+                .frame(minWidth: 120, maxWidth: 220)
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 9)
+        .padding(10)
         .background(.quaternary.opacity(0.5))
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text("\(attribute.name), \(attribute.status.rawValue)"))
     }
 }

@@ -249,3 +249,15 @@ func stateColor(_ state: DriveHealthState) -> Color {
     case .unknown: .secondary
     }
 }
+
+/// SF Symbol per health state, so status is conveyed by shape and not colour
+/// alone (accessibility / colour-blindness).
+func stateIcon(_ state: DriveHealthState) -> String {
+    switch state {
+    case .ok: "checkmark.circle.fill"
+    case .warning: "exclamationmark.triangle.fill"
+    case .failing: "exclamationmark.triangle.fill"
+    case .failed: "xmark.octagon.fill"
+    case .unknown: "questionmark.circle"
+    }
+}

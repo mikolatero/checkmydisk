@@ -5,22 +5,15 @@ struct ErrorsLogView: View {
 
     var body: some View {
         TableOrEmpty(title: "S.M.A.R.T. Error Log", isEmpty: snapshot.errorLog.isEmpty, emptyText: "This drive did not report SMART errors or does not expose an error log.") {
-            VStack(spacing: 1) {
-                LogHeader(columns: ["#", "lifetime (h)", "errors", "prior command", "LBA"])
-                ForEach(snapshot.errorLog) { entry in
-                    HStack {
-                        cell("\(entry.id)", width: 42)
-                        cell(entry.lifetimeHours.map(String.init) ?? "-", width: 110)
-                        cell(entry.errors, width: 260)
-                        cell(entry.priorCommand, width: 220)
-                        cell(entry.lba ?? "-", width: 140)
-                        Spacer()
-                    }
-                    .padding(9)
-                    .background(.quaternary.opacity(0.5))
-                }
+            Table(snapshot.errorLog) {
+                TableColumn("#") { Text("\($0.id)") }
+                    .width(min: 36, ideal: 44)
+                TableColumn("Lifetime (h)") { Text($0.lifetimeHours.map(String.init) ?? "-") }
+                    .width(min: 80, ideal: 100)
+                TableColumn("Errors") { Text($0.errors).textSelection(.enabled) }
+                TableColumn("Prior command") { Text($0.priorCommand).textSelection(.enabled) }
+                TableColumn("LBA") { Text($0.lba ?? "-").textSelection(.enabled) }
             }
-            .padding(12)
         }
     }
 }
@@ -109,23 +102,17 @@ struct SelfTestsView: View {
             }
 
             TableOrEmpty(title: "Self-tests", isEmpty: snapshot.selfTests.isEmpty, emptyText: "No self-test history was reported. Some NVMe and USB devices do not expose self-test capabilities.") {
-                VStack(spacing: 1) {
-                    LogHeader(columns: ["#", "lifetime (h)", "test type", "progress", "status", "LBA of 1st error"])
-                    ForEach(snapshot.selfTests) { entry in
-                        HStack {
-                            cell("\(entry.id)", width: 42)
-                            cell(entry.lifetimeHours.map(String.init) ?? "-", width: 110)
-                            cell(entry.testType, width: 130)
-                            cell(entry.remainingPercent.map { "\(100 - $0)%" } ?? "100%", width: 90)
-                            cell(entry.status, width: 260)
-                            cell(entry.lbaOfFirstError ?? "-", width: 140)
-                            Spacer()
-                        }
-                        .padding(9)
-                        .background(.quaternary.opacity(0.5))
-                    }
+                Table(snapshot.selfTests) {
+                    TableColumn("#") { Text("\($0.id)") }
+                        .width(min: 36, ideal: 44)
+                    TableColumn("Lifetime (h)") { Text($0.lifetimeHours.map(String.init) ?? "-") }
+                        .width(min: 80, ideal: 100)
+                    TableColumn("Test type") { Text($0.testType) }
+                    TableColumn("Progress") { Text($0.remainingPercent.map { "\(100 - $0)%" } ?? "100%") }
+                        .width(min: 70, ideal: 90)
+                    TableColumn("Status") { Text($0.status).textSelection(.enabled) }
+                    TableColumn("LBA of 1st error") { Text($0.lbaOfFirstError ?? "-").textSelection(.enabled) }
                 }
-                .padding(12)
             }
         }
     }
@@ -199,42 +186,4 @@ struct TableOrEmpty<Content: View>: View {
         // centered in the detail column.
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
-}
-
-struct LogHeader: View {
-    let columns: [String]
-
-    var body: some View {
-        HStack {
-            ForEach(columns, id: \.self) { column in
-                Text(column)
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.secondary)
-                    .frame(width: width(for: column), alignment: .leading)
-            }
-            Spacer()
-        }
-        .padding(.horizontal, 9)
-        .padding(.vertical, 5)
-        .background(.quaternary)
-    }
-
-    private func width(for column: String) -> CGFloat {
-        switch column {
-        case "#": 42
-        case "lifetime (h)": 110
-        case "test type": 130
-        case "progress": 90
-        case "status", "errors": 260
-        case "prior command": 220
-        default: 140
-        }
-    }
-}
-
-func cell(_ text: String, width: CGFloat) -> some View {
-    Text(text)
-        .lineLimit(2)
-        .frame(width: width, alignment: .leading)
-        .textSelection(.enabled)
 }
