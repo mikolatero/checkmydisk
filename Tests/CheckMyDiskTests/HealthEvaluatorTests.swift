@@ -136,6 +136,61 @@ final class HealthEvaluatorTests: XCTestCase {
         XCTAssertFalse(NotificationService.shouldNotify(previous: .failed, new: .failed))
     }
 
+    // MARK: - Tendencias (TrendAnalyzer)
+
+    func testDeltaDetectsCriticalRawIncrease() throws {
+        let previous = try SmartctlParser.parseSnapshot(Data(ataSnapshotJSON(reallocated: 0).utf8), fallbackDevice: device)
+        let current = try SmartctlParser.parseSnapshot(Data(ataSnapshotJSON(reallocated: 3).utf8), fallbackDevice: device)
+        let deltas = TrendAnalyzer.deltas(current: current, previous: previous)
+        let reallocated = try XCTUnwrap(deltas.first { $0.name == "Reallocated_Sector_Ct" })
+        XCTAssertEqual(reallocated.change, 3)
+        XCTAssertTrue(reallocated.isCritical)
+        // Power_On_Hours no cambió, así que no debe aparecer.
+        XCTAssertFalse(deltas.contains { $0.name == "Power_On_Hours" })
+    }
+
+    func testCriticalIncreasesOnlyReturnsGrowingCritical() throws {
+        let previous = try SmartctlParser.parseSnapshot(Data(ataSnapshotJSON(reallocated: 5).utf8), fallbackDevice: device)
+        let current = try SmartctlParser.parseSnapshot(Data(ataSnapshotJSON(reallocated: 8).utf8), fallbackDevice: device)
+        let increases = TrendAnalyzer.criticalIncreases(current: current, previous: previous)
+        XCTAssertEqual(increases.count, 1)
+        XCTAssertEqual(increases.first?.name, "Reallocated_Sector_Ct")
+        // Sin retroceso: si baja (improbable), no cuenta como incremento crítico.
+        XCTAssertTrue(TrendAnalyzer.criticalIncreases(current: previous, previous: current).isEmpty)
+    }
+
+    func testRemainingLifeEstimateForDecliningWear() throws {
+        let start = Date(timeIntervalSince1970: 1_700_000_000)
+        let points = (0..<10).map { day in
+            HistoryPoint(date: start.addingTimeInterval(Double(day) * 86_400), state: .ok, temperature: 40, health: 100, performance: 100, lifetime: 100 - day)
+        }
+        let estimate = try XCTUnwrap(TrendAnalyzer.estimateRemainingLife(from: points, asOf: start.addingTimeInterval(9 * 86_400)))
+        XCTAssertTrue((88...93).contains(estimate.daysRemaining), "daysRemaining inesperado: \(estimate.daysRemaining)")
+    }
+
+    func testRemainingLifeNilWhenFlat() {
+        let start = Date(timeIntervalSince1970: 1_700_000_000)
+        let points = (0..<10).map { day in
+            HistoryPoint(date: start.addingTimeInterval(Double(day) * 86_400), state: .ok, temperature: 40, health: 100, performance: 100, lifetime: 95)
+        }
+        XCTAssertNil(TrendAnalyzer.estimateRemainingLife(from: points, asOf: start.addingTimeInterval(9 * 86_400)))
+    }
+
+    private func ataSnapshotJSON(reallocated: Int) -> String {
+        """
+        {
+          "model_name": "SSD",
+          "smart_status": {"passed": true},
+          "ata_smart_attributes": {
+            "table": [
+              {"id": 5, "name": "Reallocated_Sector_Ct", "value": 100, "thresh": 10, "flags": {"prefailure": true}, "raw": {"value": \(reallocated), "string": "\(reallocated)"}},
+              {"id": 9, "name": "Power_On_Hours", "value": 100, "thresh": 0, "flags": {"prefailure": false}, "raw": {"value": 1000, "string": "1000"}}
+            ]
+          }
+        }
+        """
+    }
+
     // MARK: - Fixtures
 
     private var device: SmartDeviceSummary {

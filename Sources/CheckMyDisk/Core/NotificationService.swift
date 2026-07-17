@@ -20,6 +20,21 @@ final class NotificationService {
         UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)) { _ in }
     }
 
+    /// Notifies when a monitored critical attribute (reallocated/pending sectors,
+    /// media errors…) grew since the last check, even if the overall SMART state
+    /// did not change. `deltas` is expected to already be the critical set.
+    func notifyAttributeRegressions(device: SmartDeviceSummary, deltas: [AttributeDelta], notificationsEnabled: Bool) {
+        guard notificationsEnabled else { return }
+        let increases = deltas.filter { $0.isCritical && $0.change > 0 }
+        guard !increases.isEmpty else { return }
+        let names = increases.map(\.name).joined(separator: ", ")
+
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: "CheckMyDisk: attribute change")
+        content.body = String(localized: "\(device.displayName): \(names) increased since the last check.")
+        UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)) { _ in }
+    }
+
     /// Requests notification authorization only when the user actually wants
     /// notifications. `requestAuthorization` is idempotent: once the status is
     /// determined it returns without prompting again.

@@ -22,6 +22,8 @@ final class DriveStore {
     var lastError: String?
     var deviceErrors: [String: String] = [:]
     var satStatus = SATSupportStatus(kextInstalled: false, pluginInstalled: false, iokitCapableDevices: 0)
+    /// Critical raw-value changes per drive since the previous check.
+    var attributeDeltas: [String: [AttributeDelta]] = [:]
 
     @ObservationIgnored private let settingsBox: SettingsBox
     @ObservationIgnored private lazy var runner = SmartctlRunner { [settingsBox] in
@@ -38,6 +40,8 @@ final class DriveStore {
     )
     @ObservationIgnored private var activeRefresh: Task<Void, Never>?
     @ObservationIgnored private var monitorTask: Task<Void, Never>?
+    /// Previous snapshot per drive (keyed by persistent id) for computing deltas.
+    @ObservationIgnored private var previousSnapshots: [String: DriveSnapshot] = [:]
 
     init(snapshotStore: SnapshotStore? = try? SnapshotStore()) {
         let loaded = SettingsStore.load()
@@ -61,6 +65,10 @@ final class DriveStore {
     /// Worst health state across all drives, for the menu-bar status icon.
     var worstState: DriveHealthState {
         assessments.values.map(\.smartStatus).max { $0.severity < $1.severity } ?? .unknown
+    }
+
+    var selectedAttributeDeltas: [AttributeDelta] {
+        selectedDeviceID.flatMap { attributeDeltas[$0] } ?? []
     }
 
     var smartctlDescription: String {
@@ -126,6 +134,7 @@ final class DriveStore {
             snapshots = snapshots.filter { knownIDs.contains($0.key) }
             assessments = assessments.filter { knownIDs.contains($0.key) }
             deviceErrors = deviceErrors.filter { knownIDs.contains($0.key) }
+            attributeDeltas = attributeDeltas.filter { knownIDs.contains($0.key) }
             if selectedDeviceID.map({ !knownIDs.contains($0) }) ?? true {
                 selectedDeviceID = scanned.first?.id
             }
@@ -133,11 +142,28 @@ final class DriveStore {
             for (deviceID, result) in scanData.results {
                 switch result {
                 case let .success((snapshot, assessment)):
+                    let previous: DriveSnapshot?
+                    if let cached = previousSnapshots[snapshot.persistentID] {
+                        previous = cached
+                    } else {
+                        previous = await latestPersistedSnapshot(snapshot.persistentID)
+                    }
                     snapshots[deviceID] = snapshot
                     assessments[deviceID] = assessment
                     deviceErrors[deviceID] = nil
+                    let device = scanned.first(where: { $0.id == deviceID })
+                    if let previous {
+                        let critical = TrendAnalyzer.deltas(current: snapshot, previous: previous).filter(\.isCritical)
+                        attributeDeltas[deviceID] = critical
+                        if let device {
+                            notifications.notifyAttributeRegressions(device: device, deltas: critical, notificationsEnabled: settings.notificationsEnabled)
+                        }
+                    } else {
+                        attributeDeltas[deviceID] = []
+                    }
+                    previousSnapshots[snapshot.persistentID] = snapshot
                     persist(snapshot: snapshot, assessment: assessment)
-                    if let device = scanned.first(where: { $0.id == deviceID }) {
+                    if let device {
                         notifications.notifyIfNeeded(device: device, assessment: assessment, notificationsEnabled: settings.notificationsEnabled)
                     }
                 case let .failure(error):
@@ -191,6 +217,11 @@ final class DriveStore {
 
     func saveSettings() {
         SettingsStore.save(settings)
+    }
+
+    private func latestPersistedSnapshot(_ deviceID: String) async -> DriveSnapshot? {
+        guard let snapshotStore else { return nil }
+        return try? await snapshotStore.latestSnapshot(deviceID: deviceID)
     }
 
     private func persist(snapshot: DriveSnapshot, assessment: DriveAssessment) {

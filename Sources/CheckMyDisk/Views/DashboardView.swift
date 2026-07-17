@@ -30,6 +30,11 @@ struct DashboardView: View {
                 SectionBox(String(localized: "Problems Summary")) {
                     ProblemsSummaryView(assessment: assessment)
                 }
+                if !store.selectedAttributeDeltas.isEmpty {
+                    SectionBox(String(localized: "Changes Since Last Check")) {
+                        AttributeDeltasView(deltas: store.selectedAttributeDeltas)
+                    }
+                }
                 SectionBox(String(localized: "Important Health Indicators")) {
                     IndicatorsCompactList(attributes: Array(snapshot.attributes.prefix(10)))
                 }
@@ -419,6 +424,33 @@ struct ProblemsSummaryView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+            }
+        }
+    }
+}
+
+struct AttributeDeltasView: View {
+    let deltas: [AttributeDelta]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ForEach(deltas) { delta in
+                HStack {
+                    Image(systemName: delta.change > 0 ? "arrow.up.forward" : "arrow.down.forward")
+                        .foregroundStyle(delta.change > 0 ? .orange : .secondary)
+                    Text(delta.name)
+                        .fontWeight(.semibold)
+                    Spacer()
+                    Text("\(delta.previousRaw) → \(delta.currentRaw)")
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                    Text(delta.change > 0 ? "+\(delta.change)" : "\(delta.change)")
+                        .fontWeight(.bold)
+                        .foregroundStyle(delta.change > 0 ? .orange : .secondary)
+                        .monospacedDigit()
+                        .frame(width: 64, alignment: .trailing)
+                }
+                .font(.callout)
             }
         }
     }

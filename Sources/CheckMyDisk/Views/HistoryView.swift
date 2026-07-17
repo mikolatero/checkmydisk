@@ -61,6 +61,11 @@ struct HistoryView: View {
                     }
                     if points.contains(where: { $0.lifetime != nil }) {
                         SectionBox(String(localized: "SSD Lifetime Left")) {
+                            if let estimate = TrendAnalyzer.estimateRemainingLife(from: points, asOf: Date()) {
+                                Label(String(localized: "~\(estimate.daysRemaining) days of life left at the current wear rate"), systemImage: "hourglass")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                             lifetimeChart
                         }
                     }

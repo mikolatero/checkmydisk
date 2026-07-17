@@ -141,6 +141,20 @@ final class SnapshotStore: Sendable {
         }
     }
 
+    /// The full most-recent snapshot stored for a drive, used as the baseline for
+    /// "changes since last check" across app launches. Nil until the first save.
+    func latestSnapshot(deviceID: String) async throws -> DriveSnapshot? {
+        try await dbPool.read { db in
+            guard let row = try Row.fetchOne(db, sql: "SELECT snapshot_json FROM latest_snapshots WHERE device_id = ?", arguments: [deviceID]),
+                  let data = row["snapshot_json"] as Data? else {
+                return nil
+            }
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            return try? decoder.decode(DriveSnapshot.self, from: data)
+        }
+    }
+
     func pruneHistory(olderThanDays days: Int) async throws {
         guard days > 0 else { return }
         let cutoff = Date().addingTimeInterval(-Double(days) * 86_400).timeIntervalSince1970
