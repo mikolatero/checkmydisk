@@ -1,8 +1,26 @@
+import ServiceManagement
 import SwiftUI
 
 struct PreferencesView: View {
     @Environment(DriveStore.self) private var store
     @Environment(SoftwareUpdateController.self) private var softwareUpdateController
+
+    private var launchAtLoginBinding: Binding<Bool> {
+        Binding {
+            SMAppService.mainApp.status == .enabled
+        } set: { enabled in
+            do {
+                if enabled {
+                    try SMAppService.mainApp.register()
+                } else {
+                    try SMAppService.mainApp.unregister()
+                }
+            } catch {
+                // Registration can fail (e.g. when launched from a non-permanent
+                // location); the toggle re-reads the real status on the next render.
+            }
+        }
+    }
 
     var body: some View {
         @Bindable var store = store
@@ -24,7 +42,14 @@ struct PreferencesView: View {
                 }
             }
 
-            Section("Monitoring While Open") {
+            Section("Startup") {
+                Toggle("Open at login", isOn: launchAtLoginBinding)
+                Text("Keeps CheckMyDisk in the menu bar to monitor drives in the background.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("Monitoring") {
                 Slider(value: $store.settings.refreshIntervalSeconds, in: 60...1800, step: 60) {
                     Text("Refresh interval")
                 } minimumValueLabel: {
@@ -36,6 +61,9 @@ struct PreferencesView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Toggle("Local notifications on worsening status", isOn: $store.settings.notificationsEnabled)
+                    .onChange(of: store.settings.notificationsEnabled) { _, enabled in
+                        if enabled { store.requestNotificationAuthorization() }
+                    }
             }
 
             Section("History") {

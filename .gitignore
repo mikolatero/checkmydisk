@@ -5,6 +5,7 @@ build/
 dist/
 xcuserdata/
 *.xcuserstate
+*.profraw
 *.ed25519
 *.sparkle_private_key
 .DS_Store

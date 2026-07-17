@@ -58,6 +58,11 @@ final class DriveStore {
         selectedDeviceID.flatMap { volumes[$0] } ?? []
     }
 
+    /// Worst health state across all drives, for the menu-bar status icon.
+    var worstState: DriveHealthState {
+        assessments.values.map(\.smartStatus).max { $0.severity < $1.severity } ?? .unknown
+    }
+
     var smartctlDescription: String {
         if let executable = runner.resolvedExecutable() {
             return "\(executable.source): \(executable.url.path)"
@@ -69,6 +74,7 @@ final class DriveStore {
     /// Idempotent, so additional windows do not spawn additional loops.
     func startMonitoring() {
         guard monitorTask == nil else { return }
+        notifications.requestAuthorizationIfEnabled(settings.notificationsEnabled)
         if let snapshotStore {
             let retentionDays = settings.historyRetentionDays
             Task.detached {
@@ -175,6 +181,12 @@ final class DriveStore {
 
     func selfTestKind(for deviceID: String) -> String? {
         selfTests.kind(for: deviceID)
+    }
+
+    /// Called when the user turns notifications on, so permission is requested at a
+    /// deliberate moment rather than unconditionally at launch.
+    func requestNotificationAuthorization() {
+        notifications.requestAuthorizationIfEnabled(true)
     }
 
     func saveSettings() {

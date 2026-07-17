@@ -20,6 +20,14 @@ final class NotificationService {
         UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)) { _ in }
     }
 
+    /// Requests notification authorization only when the user actually wants
+    /// notifications. `requestAuthorization` is idempotent: once the status is
+    /// determined it returns without prompting again.
+    func requestAuthorizationIfEnabled(_ enabled: Bool) {
+        guard enabled else { return }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+    }
+
     /// Worsening = strictly higher severity than before and above OK. The very
     /// first observation (no previous state) never notifies.
     static func shouldNotify(previous: DriveHealthState?, new: DriveHealthState) -> Bool {

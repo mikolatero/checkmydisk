@@ -1,32 +1,31 @@
 import SwiftUI
-import UserNotifications
 
 @main
 struct CheckMyDiskApp: App {
-    @State private var store = DriveStore()
-    @State private var softwareUpdateController = SoftwareUpdateController()
-
-    init() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
-    }
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        WindowGroup {
+        Window("CheckMyDisk", id: "main") {
             ContentView()
-                .environment(store)
-                .environment(softwareUpdateController)
+                .environment(appDelegate.store)
+                .environment(appDelegate.softwareUpdateController)
                 .frame(minWidth: 1240, minHeight: 760)
-                .task {
-                    store.startMonitoring()
-                }
         }
         .defaultSize(width: 1280, height: 820)
         .windowResizability(.contentMinSize)
 
+        MenuBarExtra {
+            MenuBarContentView()
+                .environment(appDelegate.store)
+        } label: {
+            MenuBarLabel()
+                .environment(appDelegate.store)
+        }
+
         Settings {
             PreferencesView()
-                .environment(store)
-                .environment(softwareUpdateController)
+                .environment(appDelegate.store)
+                .environment(appDelegate.softwareUpdateController)
                 .frame(width: 520)
         }
     }

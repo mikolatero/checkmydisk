@@ -34,6 +34,8 @@
 		A00000000000000000000126 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000227 /* NotificationService.swift */; };
 		A00000000000000000000127 /* DiagnosticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000228 /* DiagnosticsService.swift */; };
 		A00000000000000000000128 /* SelfTestCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000229 /* SelfTestCoordinator.swift */; };
+		A00000000000000000000129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000237 /* AppDelegate.swift */; };
+		A00000000000000000000136 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000238 /* MenuBarContentView.swift */; };
 		A00000000000000000000125 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000802 /* Sparkle */; };
 		A00000000000000000000130 /* AppleNVMeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */; };
 		A00000000000000000000131 /* HealthEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000231 /* HealthEvaluatorTests.swift */; };
@@ -82,6 +84,8 @@
 		A00000000000000000000227 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		A00000000000000000000228 /* DiagnosticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsService.swift; sourceTree = "<group>"; };
 		A00000000000000000000229 /* SelfTestCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfTestCoordinator.swift; sourceTree = "<group>"; };
+		A00000000000000000000237 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A00000000000000000000238 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
 		A00000000000000000000226 /* CheckMyDisk-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CheckMyDisk-Info.plist"; sourceTree = "<group>"; };
 		A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleNVMeIntegrationTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000231 /* HealthEvaluatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthEvaluatorTests.swift; sourceTree = "<group>"; };
@@ -139,6 +143,7 @@
 			children = (
 				A00000000000000000000201 /* CheckMyDiskApp.swift */,
 				A00000000000000000000225 /* SoftwareUpdateController.swift */,
+					A00000000000000000000237 /* AppDelegate.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -173,6 +178,7 @@
 				A00000000000000000000214 /* CompatibilityPanel.swift */,
 				A00000000000000000000215 /* PreferencesView.swift */,
 				A00000000000000000000222 /* HistoryView.swift */,
+					A00000000000000000000238 /* MenuBarContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -366,6 +372,8 @@
 					A00000000000000000000126 /* NotificationService.swift in Sources */,
 					A00000000000000000000127 /* DiagnosticsService.swift in Sources */,
 					A00000000000000000000128 /* SelfTestCoordinator.swift in Sources */,
+					A00000000000000000000129 /* AppDelegate.swift in Sources */,
+					A00000000000000000000136 /* MenuBarContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
