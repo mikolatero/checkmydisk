@@ -1,1548 +1,1618 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "": {},
-    " (lifetime %lld–%lld °C)": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " (históricos %lld–%lld °C)"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    " (lifetime %lld–%lld °C)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " (históricos %lld–%lld °C)"
           }
         }
       }
     },
-    "%": {},
-    "%@ did not finish within %lld seconds and was terminated.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ no terminó en %2$lld segundos y fue finalizado."
+    "-" : {
+
+    },
+    "%" : {
+
+    },
+    "%@ — %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ — %2$@"
           }
         }
       }
     },
-    "%@ free of %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ libres de %2$@"
+    "%@ did not finish within %lld seconds and was terminated." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ no terminó en %2$lld segundos y fue finalizado."
           }
         }
       }
     },
-    "%@ has %lld health issue(s).": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ tiene %2$lld problema(s) de salud."
+    "%@ free of %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ libres de %2$@"
           }
         }
       }
     },
-    "%@, %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@, %2$@"
+    "%@ has %lld health issue(s)." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ tiene %2$lld problema(s) de salud."
           }
         }
       }
     },
-    "%@: %lld%%": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@: %2$lld%%"
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
           }
         }
       }
     },
-    "%lld": {},
-    "%lld active issue(s)": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld incidencia(s) activa(s)"
+    "%@: %lld%%" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$lld%%"
           }
         }
       }
     },
-    "%lld days": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld días"
+    "%lld" : {
+
+    },
+    "%lld °C" : {
+
+    },
+    "%lld active issue(s)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld incidencia(s) activa(s)"
           }
         }
       }
     },
-    "%lld s": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld s"
+    "%lld days" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld días"
           }
         }
       }
     },
-    "%lld °C": {},
-    "%lld%%": {},
-    "%lld°": {},
-    "%llu media/data integrity errors have been reported.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se han reportado %llu errores de integridad de datos/medio."
+    "%lld s" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld s"
           }
         }
       }
     },
-    "-": {},
-    "1m": {},
-    "24 h": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "24 h"
+    "%lld%%" : {
+
+    },
+    "%lld°" : {
+
+    },
+    "%llu media/data integrity errors have been reported." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se han reportado %llu errores de integridad de datos/medio."
           }
         }
       }
     },
-    "30 days": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "30 días"
+    "°C" : {
+
+    },
+    "1m" : {
+
+    },
+    "7 days" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 días"
           }
         }
       }
     },
-    "30m": {},
-    "7 days": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "7 días"
+    "24 h" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24 h"
           }
         }
       }
     },
-    "Active: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Activo: %@"
+    "30 days" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 días"
           }
         }
       }
     },
-    "Advanced S.M.A.R.T. Status:": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estado S.M.A.R.T. avanzado:"
+    "30m" : {
+
+    },
+    "Active: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activo: %@"
           }
         }
       }
     },
-    "All": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todo"
+    "Advanced S.M.A.R.T. Status:" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado S.M.A.R.T. avanzado:"
           }
         }
       }
     },
-    "Anonymize serial numbers and WWN in reports": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Anonimizar números de serie y WWN en los informes"
+    "All" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todo"
           }
         }
       }
     },
-    "Any Status": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cualquier estado"
+    "Anonymize serial numbers and WWN in reports" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anonimizar números de serie y WWN en los informes"
           }
         }
       }
     },
-    "Any Type": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cualquier tipo"
+    "Any Status" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cualquier estado"
           }
         }
       }
     },
-    "Attributes were below threshold in the past": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hubo atributos por debajo del umbral en el pasado"
+    "Any Type" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cualquier tipo"
           }
         }
       }
     },
-    "Auto refresh on": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Actualización automática"
+    "Attributes were below threshold in the past" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hubo atributos por debajo del umbral en el pasado"
           }
         }
       }
     },
-    "Available Spare": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reserva disponible"
+    "Auto refresh on" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualización automática"
           }
         }
       }
     },
-    "Available spare below threshold": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reserva disponible por debajo del umbral"
+    "Available Spare" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva disponible"
           }
         }
       }
     },
-    "Available spare is %lld%% and threshold is %lld%%.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Available spare is %1$lld%% and threshold is %2$lld%%."
+    "Available spare below threshold" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva disponible por debajo del umbral"
+          }
+        }
+      }
+    },
+    "Available spare is %lld%% and threshold is %lld%%." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Available spare is %1$lld%% and threshold is %2$lld%%."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La reserva disponible es del %1$lld%% y el umbral del %2$lld%%."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La reserva disponible es del %1$lld%% y el umbral del %2$lld%%."
           }
         }
       }
     },
-    "Backend: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Backend: %@"
+    "Backend: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backend: %@"
           }
         }
       }
     },
-    "Built-in SMART status failed": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El estado SMART integrado ha fallado"
+    "Built-in SMART status failed" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El estado SMART integrado ha fallado"
           }
         }
       }
     },
-    "Bundled first": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Primero el integrado"
+    "Bundled first" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primero el integrado"
           }
         }
       }
     },
-    "Changes are saved automatically.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los cambios se guardan automáticamente."
+    "Changes are saved automatically." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los cambios se guardan automáticamente."
           }
         }
       }
     },
-    "Check for Updates…": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Buscar actualizaciones…"
+    "Check for Updates…" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar actualizaciones…"
           }
         }
       }
     },
-    "Checking": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comprobando"
+    "Checking" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprobando"
           }
         }
       }
     },
-    "Checking drives...": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comprobando discos..."
+    "Checking drives..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprobando discos..."
           }
         }
       }
     },
-    "Command timeout": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiempo límite de comando"
-          }
-        }
-      }
-    },
-    "Controller Busy Time": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiempo de controlador ocupado"
-          }
-        }
-      }
-    },
-    "Could not save the report": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudo guardar el informe"
-          }
-        }
-      }
-    },
-    "Current temperature is %lld °C.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La temperatura actual es de %lld °C."
-          }
-        }
-      }
-    },
-    "Current: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Actual: %@"
-          }
-        }
-      }
-    },
-    "Custom path": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ruta personalizada"
-          }
-        }
-      }
-    },
-    "Dashboard": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Panel"
-          }
-        }
-      }
-    },
-    "Data Read": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Datos leídos"
-          }
-        }
-      }
-    },
-    "Data Written": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Datos escritos"
-          }
-        }
-      }
-    },
-    "Date": {},
-    "Device Path": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ruta del dispositivo"
-          }
-        }
-      }
-    },
-    "Device Statistics": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estadísticas del dispositivo"
-          }
-        }
-      }
-    },
-    "Device Statistics are optional and this drive did not expose them through smartctl.": {
-      "extractionState": "stale",
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Las estadísticas del dispositivo son opcionales y este disco no las expone a través de smartctl."
-          }
-        }
-      }
-    },
-    "Driver detected": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Driver detectado"
-          }
-        }
-      }
-    },
-    "Driver not detected": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Driver no detectado"
-          }
-        }
-      }
-    },
-    "ETA: ~%lld min": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiempo estimado: ~%lld min"
-          }
-        }
-      }
-    },
-    "Error: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Error: %@"
-          }
-        }
-      }
-    },
-    "Errors Log": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registro de errores"
-          }
-        }
-      }
+    "Checking drives…" : {
+
     },
-    "Every %lld minutes": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cada %lld minutos"
-          }
-        }
-      }
+    "CheckMyDisk" : {
+
     },
-    "External USB / FireWire SMART": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SMART externo USB / FireWire"
+    "Command timeout" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo límite de comando"
           }
         }
       }
     },
-    "Failed: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Falló: %@"
+    "Controller Busy Time" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo de controlador ocupado"
           }
         }
       }
     },
-    "Firmware": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Firmware"
+    "Could not save the report" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo guardar el informe"
           }
         }
       }
     },
-    "Firmware Temperature History": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Histórico de temperatura del firmware"
+    "Current temperature is %lld °C." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La temperatura actual es de %lld °C."
           }
         }
       }
     },
-    "Form Factor": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Formato"
+    "Current: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actual: %@"
           }
         }
       }
     },
-    "General Information": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Información general"
+    "Custom path" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruta personalizada"
           }
         }
       }
     },
-    "Health": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salud"
+    "Dashboard" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panel"
           }
         }
       }
     },
-    "Health & Performance": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salud y rendimiento"
+    "Data Read" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos leídos"
           }
         }
       }
     },
-    "Health Indicators": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Indicadores de salud"
+    "Data Written" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos escritos"
           }
         }
       }
     },
-    "High temperature": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Temperatura alta"
-          }
-        }
-      }
+    "Date" : {
+
     },
-    "History": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Histórico"
+    "Device Path" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruta del dispositivo"
           }
         }
       }
     },
-    "Homebrew first": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Primero Homebrew"
+    "Device Statistics" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estadísticas del dispositivo"
           }
         }
       }
     },
-    "Host Read Commands": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comandos de lectura"
+    "Device Statistics are optional and this drive did not expose them through smartctl." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las estadísticas del dispositivo son opcionales y este disco no las expone a través de smartctl."
           }
         }
       }
     },
-    "Host Write Commands": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comandos de escritura"
+    "Driver detected" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Driver detectado"
           }
         }
       }
     },
-    "Hours before last check": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Horas antes de la última comprobación"
+    "Driver not detected" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Driver no detectado"
           }
         }
       }
     },
-    "Important Health Indicators": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Indicadores de salud importantes"
+    "Error: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error: %@"
           }
         }
       }
     },
-    "Interface Speed": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Velocidad de interfaz"
+    "Errors Log" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registro de errores"
           }
         }
       }
     },
-    "JSON Report...": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Informe JSON..."
+    "ETA: ~%lld min" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo estimado: ~%lld min"
           }
         }
       }
     },
-    "Keep history for": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conservar histórico durante"
+    "Every %lld minutes" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada %lld minutos"
           }
         }
       }
     },
-    "Last checked:": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Última comprobación:"
+    "External USB / FireWire SMART" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMART externo USB / FireWire"
           }
         }
       }
     },
-    "Life-Span": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vida útil"
+    "Failed: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falló: %@"
           }
         }
       }
     },
-    "Lifetime Left": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vida restante"
+    "Firmware" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Firmware"
           }
         }
       }
     },
-    "Loading history...": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cargando histórico..."
+    "Firmware Temperature History" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Histórico de temperatura del firmware"
           }
         }
       }
     },
-    "Local notifications on worsening status": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notificaciones locales si el estado empeora"
+    "Form Factor" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formato"
           }
         }
       }
     },
-    "Minutes": {},
-    "Mode": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Modo"
+    "General Information" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información general"
           }
         }
       }
     },
-    "Model": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Modelo"
+    "Health" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salud"
           }
         }
       }
     },
-    "Monitoring While Open": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Monitorización mientras está abierta"
+    "Health & Performance" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salud y rendimiento"
           }
         }
       }
     },
-    "NVMe critical warning": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aviso crítico NVMe"
+    "Health Indicators" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indicadores de salud"
           }
         }
       }
     },
-    "NVMe media errors": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Errores de medio NVMe"
+    "High temperature" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperatura alta"
           }
         }
       }
     },
-    "Never": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nunca"
+    "History" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Histórico"
           }
         }
       }
     },
-    "No SMART-capable drives found": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se encontraron discos compatibles con SMART"
+    "Homebrew first" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primero Homebrew"
           }
         }
       }
     },
-    "No active issues": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sin incidencias activas"
+    "Host Read Commands" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comandos de lectura"
           }
         }
       }
     },
-    "No health-related issues found": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se encontraron problemas de salud"
+    "Host Write Commands" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comandos de escritura"
           }
         }
       }
     },
-    "No self-test history was reported. Some NVMe and USB devices do not expose self-test capabilities.": {
-      "extractionState": "stale",
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se reportó histórico de auto-tests. Algunos dispositivos NVMe y USB no exponen esta capacidad."
+    "Hours before last check" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horas antes de la última comprobación"
           }
         }
       }
     },
-    "No smartctl executable was found. Install smartmontools or add a bundled smartctl resource.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se encontró ningún ejecutable de smartctl. Instala smartmontools o añade un smartctl integrado en la app."
+    "Important Health Indicators" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indicadores de salud importantes"
           }
         }
       }
     },
-    "Not enough history for this range yet. Data accumulates with every check while the app is open.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aún no hay suficiente histórico en este rango. Los datos se acumulan con cada comprobación mientras la app está abierta."
+    "Interface Speed" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad de interfaz"
           }
         }
       }
     },
-    "Not found": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No encontrado"
+    "JSON Report..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informe JSON..."
           }
         }
       }
     },
-    "Not supported": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No compatible"
+    "Keep history for" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conservar histórico durante"
           }
         }
       }
     },
-    "OK": {},
-    "One or more pre-fail attributes are at or below their failure threshold.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uno o más atributos pre-fallo están en o por debajo de su umbral de fallo."
-          }
-        }
-      }
+    "Keeps CheckMyDisk in the menu bar to monitor drives in the background." : {
+
     },
-    "Performance": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rendimiento"
+    "Last checked:" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última comprobación:"
           }
         }
       }
     },
-    "Power Cycles Count": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ciclos de encendido"
+    "Life-Span" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida útil"
           }
         }
       }
     },
-    "Power On Time": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiempo encendido"
+    "Lifetime Left" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida restante"
           }
         }
       }
     },
-    "Pre-Fail": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pre-fallo"
+    "Loading history..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando histórico..."
           }
         }
       }
     },
-    "Pre-fail attributes below threshold": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Atributos pre-fallo por debajo del umbral"
+    "Local notifications on worsening status" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificaciones locales si el estado empeora"
           }
         }
       }
     },
-    "Problems Summary": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Resumen de problemas"
+    "macOS does not expose SMART data for many USB/SAT enclosures by default. CheckMyDisk will read any external drive that smartctl can see, and can use pass-through modes such as sat, sat12, sat16, jmicron, or auto when the driver/enclosure supports them." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS no expone datos SMART de muchas cajas USB/SAT por defecto. CheckMyDisk leerá cualquier disco externo que smartctl pueda ver, y puede usar modos pass-through como sat, sat12, sat16, jmicron o auto cuando el driver o la caja lo permitan."
           }
         }
       }
     },
-    "Protocol": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Protocolo"
-          }
-        }
-      }
+    "Minutes" : {
+
     },
-    "Range": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rango"
+    "Mode" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo"
           }
         }
       }
     },
-    "Raw value %@ is outside the expected range for this indicator.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El valor bruto %@ está fuera del rango esperado para este indicador."
+    "Model" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modelo"
           }
         }
       }
     },
-    "Read error": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Error de lectura"
-          }
-        }
-      }
+    "Monitoring" : {
+
     },
-    "Recorded by the drive itself, independent of CheckMyDisk.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registrado por el propio disco, independiente de CheckMyDisk."
+    "Monitoring While Open" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitorización mientras está abierta"
           }
         }
       }
     },
-    "Refresh": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Actualizar"
+    "Never" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nunca"
           }
         }
       }
     },
-    "Refresh drive diagnostics": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Actualizar el diagnóstico de los discos"
+    "No active issues" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin incidencias activas"
           }
         }
       }
     },
-    "Refresh interval": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Intervalo de actualización"
+    "No health-related issues found" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron problemas de salud"
           }
         }
       }
     },
-    "Reports": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Informes"
+    "No self-test history was reported. Some NVMe and USB devices do not expose self-test capabilities." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se reportó histórico de auto-tests. Algunos dispositivos NVMe y USB no exponen esta capacidad."
           }
         }
       }
     },
-    "Software Updates": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Actualizaciones de software"
+    "No SMART-capable drives found" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron discos compatibles con SMART"
           }
         }
       }
     },
-    "Rotation Rate": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Velocidad de rotación"
+    "No smartctl executable was found. Install smartmontools or add a bundled smartctl resource." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún ejecutable de smartctl. Instala smartmontools o añade un smartctl integrado en la app."
           }
         }
       }
     },
-    "S.M.A.R.T. Error Log": {
-      "extractionState": "stale",
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registro de errores S.M.A.R.T."
+    "Not enough history for this range yet. Data accumulates with every check while the app is open." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay suficiente histórico en este rango. Los datos se acumulan con cada comprobación mientras la app está abierta."
           }
         }
       }
     },
-    "SAT SMART Driver project": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Proyecto SAT SMART Driver"
+    "Not found" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No encontrado"
           }
         }
       }
     },
-    "SAT driver detected": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Driver SAT detectado"
+    "Not supported" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No compatible"
           }
         }
       }
     },
-    "SAT driver not detected": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Driver SAT no detectado"
+    "NVMe critical warning" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aviso crítico NVMe"
           }
         }
       }
     },
-    "SMART data may be incomplete": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los datos SMART pueden estar incompletos"
+    "NVMe media errors" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Errores de medio NVMe"
           }
         }
       }
     },
-    "SSD Lifetime Left": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vida restante del SSD"
-          }
-        }
-      }
+    "OK" : {
+
     },
-    "SSD lifetime consumed": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vida útil del SSD consumida"
+    "One or more pre-fail attributes are at or below their failure threshold." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uno o más atributos pre-fallo están en o por debajo de su umbral de fallo."
           }
         }
       }
     },
-    "Save Report...": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Guardar informe..."
-          }
-        }
-      }
+    "Open at login" : {
+
     },
-    "Search": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Buscar"
-          }
-        }
-      }
+    "Open CheckMyDisk" : {
+
     },
-    "Sector Size": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tamaño de sector"
+    "Performance" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendimiento"
           }
         }
       }
     },
-    "Self-test started. Waiting for drive status...": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Auto-test iniciado. Esperando el estado del disco..."
+    "Power Cycles Count" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciclos de encendido"
           }
         }
       }
     },
-    "Self-tests": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Auto-tests"
+    "Power On Time" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo encendido"
           }
         }
       }
     },
-    "Serial No.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "N.º de serie"
+    "Pre-Fail" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pre-fallo"
           }
         }
       }
     },
-    "Series": {},
-    "Snapshots are stored on every check and feed the History charts.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cada comprobación guarda una instantánea que alimenta las gráficas del histórico."
+    "Pre-fail attributes below threshold" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atributos pre-fallo por debajo del umbral"
           }
         }
       }
     },
-    "Some attributes have been at or below their threshold at some point in the drive's life.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Algunos atributos han estado en o por debajo de su umbral en algún momento de la vida del disco."
+    "Problems Summary" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resumen de problemas"
           }
         }
       }
     },
-    "Standard Version": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Versión del estándar"
+    "Protocol" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protocolo"
           }
         }
       }
     },
-    "Start Full Self-test": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Iniciar auto-test completo"
-          }
-        }
-      }
+    "Quit CheckMyDisk" : {
+
     },
-    "Start Short Self-test": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Iniciar auto-test corto"
+    "Range" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango"
           }
         }
       }
     },
-    "Stop Self-test": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Detener auto-test"
+    "Raw value %@ is outside the expected range for this indicator." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El valor bruto %@ está fuera del rango esperado para este indicador."
           }
         }
       }
     },
-    "Supported": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compatible"
+    "Read error" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de lectura"
           }
         }
       }
     },
-    "TRIM": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TRIM"
+    "Recorded by the drive itself, independent of CheckMyDisk." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrado por el propio disco, independiente de CheckMyDisk."
           }
         }
       }
     },
-    "Temperature": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Temperatura"
+    "Refresh" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar"
           }
         }
       }
     },
-    "Temperature: %lld °C": {},
-    "Text Report...": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Informe de texto..."
+    "Refresh drive diagnostics" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar el diagnóstico de los discos"
           }
         }
       }
     },
-    "The NVMe critical warning bitmask is %lld.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La máscara de aviso crítico NVMe es %lld."
+    "Refresh interval" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo de actualización"
           }
         }
       }
     },
-    "The drive firmware reports a failing SMART state. Back up important data now.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El firmware del disco reporta un estado SMART de fallo. Haz copia de seguridad de los datos importantes ahora."
-          }
-        }
-      }
+    "Refresh Now" : {
+
     },
-    "The drive reports %lld%% lifetime used.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El disco reporta un %lld%% de vida útil consumida."
+    "refreshing" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "actualizando"
           }
         }
       }
     },
-    "The drive reports this attribute as failed (%@).": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El disco reporta este atributo como fallido (%@)."
+    "Reports" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informes"
           }
         }
       }
     },
-    "The smartctl exit status has the DISK FAILING bit set. Back up important data now.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El código de salida de smartctl tiene activo el bit de DISCO FALLANDO. Haz copia de seguridad ahora."
+    "Rotation Rate" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad de rotación"
           }
         }
       }
     },
-    "These notices come from smartctl itself: the drive does not support some optional log pages. The health data was read correctly and the assessment is not affected.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estos avisos proceden del propio smartctl: el disco no soporta algunas páginas de registro opcionales. Los datos de salud se leyeron correctamente y la evaluación no se ve afectada."
+    "S.M.A.R.T. Error Log" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registro de errores S.M.A.R.T."
           }
         }
       }
     },
-    "This drive did not report SMART errors or does not expose an error log.": {
-      "extractionState": "stale",
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Este disco no reportó errores SMART o no expone un registro de errores."
+    "SAT driver detected" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Driver SAT detectado"
           }
         }
       }
     },
-    "Threshold: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Umbral: %@"
+    "SAT driver not detected" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Driver SAT no detectado"
           }
         }
       }
     },
-    "Total Capacity": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Capacidad total"
+    "SAT SMART Driver project" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proyecto SAT SMART Driver"
           }
         }
       }
     },
-    "Type: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tipo: %@"
+    "Save Report..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar informe..."
           }
         }
       }
     },
-    "USB / FireWire / SAT Support": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Soporte USB / FireWire / SAT"
+    "Search" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
           }
         }
       }
     },
-    "Unsafe Shutdowns": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apagados inseguros"
+    "Sector Size" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamaño de sector"
           }
         }
       }
     },
-    "Volumes": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volúmenes"
+    "Self-test started. Waiting for drive status..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-test iniciado. Esperando el estado del disco..."
           }
         }
       }
     },
-    "WWN": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "WWN"
+    "Self-tests" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-tests"
           }
         }
       }
     },
-    "Warning": {},
-    "Worst: %@": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peor: %@"
+    "Serial No." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "N.º de serie"
           }
         }
       }
     },
-    "macOS does not expose SMART data for many USB/SAT enclosures by default. CheckMyDisk will read any external drive that smartctl can see, and can use pass-through modes such as sat, sat12, sat16, jmicron, or auto when the driver/enclosure supports them.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "macOS no expone datos SMART de muchas cajas USB/SAT por defecto. CheckMyDisk leerá cualquier disco externo que smartctl pueda ver, y puede usar modos pass-through como sat, sat12, sat16, jmicron o auto cuando el driver o la caja lo permitan."
-          }
-        }
-      }
+    "Series" : {
+
     },
-    "refreshing": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "actualizando"
+    "SMART data may be incomplete" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los datos SMART pueden estar incompletos"
           }
         }
       }
     },
-    "smartctl %@ failed with status %d: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "smartctl %1$@ failed with status %2$d: %3$@"
+    "smartctl %@ failed with status %d: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "smartctl %1$@ failed with status %2$d: %3$@"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "smartctl %1$@ falló con estado %2$d: %3$@"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smartctl %1$@ falló con estado %2$d: %3$@"
           }
         }
       }
     },
-    "smartctl Backend": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Backend de smartctl"
+    "smartctl Backend" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backend de smartctl"
           }
         }
       }
     },
-    "smartctl Messages": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mensajes de smartctl"
+    "smartctl could not fully talk to this device; some values may be missing or stale." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smartctl no pudo comunicarse completamente con este dispositivo; pueden faltar valores o estar desactualizados."
           }
         }
       }
     },
-    "smartctl could not fully talk to this device; some values may be missing or stale.": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "smartctl no pudo comunicarse completamente con este dispositivo; pueden faltar valores o estar desactualizados."
+    "smartctl Messages" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mensajes de smartctl"
           }
         }
       }
     },
-    "smartctl reported an error": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "smartctl reportó un error"
+    "smartctl reported an error" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smartctl reportó un error"
           }
         }
       }
     },
-    "smartctl reports the disk as failing": {
-      "localizations": {
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "smartctl reporta el disco como fallando"
+    "smartctl reports the disk as failing" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smartctl reporta el disco como fallando"
           }
         }
       }
     },
-    "°C": {}
+    "Snapshots are stored on every check and feed the History charts." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada comprobación guarda una instantánea que alimenta las gráficas del histórico."
+          }
+        }
+      }
+    },
+    "Software Updates" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizaciones de software"
+          }
+        }
+      }
+    },
+    "Some attributes have been at or below their threshold at some point in the drive's life." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunos atributos han estado en o por debajo de su umbral en algún momento de la vida del disco."
+          }
+        }
+      }
+    },
+    "SSD lifetime consumed" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida útil del SSD consumida"
+          }
+        }
+      }
+    },
+    "SSD Lifetime Left" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida restante del SSD"
+          }
+        }
+      }
+    },
+    "Standard Version" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión del estándar"
+          }
+        }
+      }
+    },
+    "Start Full Self-test" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar auto-test completo"
+          }
+        }
+      }
+    },
+    "Start Short Self-test" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar auto-test corto"
+          }
+        }
+      }
+    },
+    "Startup" : {
+
+    },
+    "Stop Self-test" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detener auto-test"
+          }
+        }
+      }
+    },
+    "Supported" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compatible"
+          }
+        }
+      }
+    },
+    "Temperature" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperatura"
+          }
+        }
+      }
+    },
+    "Temperature: %lld °C" : {
+
+    },
+    "Text Report..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informe de texto..."
+          }
+        }
+      }
+    },
+    "The drive firmware reports a failing SMART state. Back up important data now." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El firmware del disco reporta un estado SMART de fallo. Haz copia de seguridad de los datos importantes ahora."
+          }
+        }
+      }
+    },
+    "The drive reports %lld%% lifetime used." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El disco reporta un %lld%% de vida útil consumida."
+          }
+        }
+      }
+    },
+    "The drive reports this attribute as failed (%@)." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El disco reporta este atributo como fallido (%@)."
+          }
+        }
+      }
+    },
+    "The NVMe critical warning bitmask is %lld." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La máscara de aviso crítico NVMe es %lld."
+          }
+        }
+      }
+    },
+    "The smartctl exit status has the DISK FAILING bit set. Back up important data now." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El código de salida de smartctl tiene activo el bit de DISCO FALLANDO. Haz copia de seguridad ahora."
+          }
+        }
+      }
+    },
+    "These notices come from smartctl itself: the drive does not support some optional log pages. The health data was read correctly and the assessment is not affected." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estos avisos proceden del propio smartctl: el disco no soporta algunas páginas de registro opcionales. Los datos de salud se leyeron correctamente y la evaluación no se ve afectada."
+          }
+        }
+      }
+    },
+    "This drive did not report SMART errors or does not expose an error log." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este disco no reportó errores SMART o no expone un registro de errores."
+          }
+        }
+      }
+    },
+    "Threshold: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbral: %@"
+          }
+        }
+      }
+    },
+    "Total Capacity" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capacidad total"
+          }
+        }
+      }
+    },
+    "TRIM" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TRIM"
+          }
+        }
+      }
+    },
+    "Type: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo: %@"
+          }
+        }
+      }
+    },
+    "Unsafe Shutdowns" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagados inseguros"
+          }
+        }
+      }
+    },
+    "USB / FireWire / SAT Support" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soporte USB / FireWire / SAT"
+          }
+        }
+      }
+    },
+    "Volumes" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volúmenes"
+          }
+        }
+      }
+    },
+    "Warning" : {
+
+    },
+    "Worst: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peor: %@"
+          }
+        }
+      }
+    },
+    "WWN" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WWN"
+          }
+        }
+      }
+    }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }
