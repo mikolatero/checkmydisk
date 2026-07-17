@@ -96,4 +96,29 @@ final class SnapshotStoreTests: XCTestCase {
         ]
         XCTAssertEqual(SnapshotStore.downsample(points, maxCount: 600), points)
     }
+
+    func testMigratesLegacyJSONBlobDatabaseIntoColumns() async throws {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("checkmydisk-legacy-\(UUID().uuidString).sqlite")
+        let snapshot = try makeSnapshot(timestamp: 1_700_000_000, temperature: 47)
+        let assessment = HealthEvaluator.evaluate(snapshot)
+
+        // Build a database in the pre-GRDB schema (one JSON blob per check, no GRDB
+        // migration tracking) via the module's debug-only test seam.
+        try SnapshotStore.makeLegacyDatabaseForTesting(at: url, rows: [(
+            deviceID: snapshot.persistentID,
+            checkedAt: snapshot.checkedAt.timeIntervalSince1970,
+            state: assessment.smartStatus.rawValue,
+            snapshotJSON: JSONEncoder.pretty.encode(snapshot),
+            assessmentJSON: JSONEncoder.pretty.encode(assessment)
+        )])
+
+        // Reopening through SnapshotStore runs the v2 migration and imports the row
+        // into the new columnar table.
+        let store = try SnapshotStore(url: url)
+        let points = try await store.history(deviceIDs: [snapshot.persistentID])
+        XCTAssertEqual(points.count, 1)
+        XCTAssertEqual(points.first?.temperature, 47)
+        XCTAssertEqual(points.first?.health, assessment.overallHealth)
+    }
 }

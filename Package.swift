@@ -11,13 +11,15 @@ let package = Package(
         .executable(name: "CheckMyDisk", targets: ["CheckMyDisk"])
     ],
     dependencies: [
-        .package(url: "https://github.com/sparkle-project/Sparkle", .upToNextMajor(from: "2.9.4"))
+        .package(url: "https://github.com/sparkle-project/Sparkle", .upToNextMajor(from: "2.9.4")),
+        .package(url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "7.0.0"))
     ],
     targets: [
         .executableTarget(
             name: "CheckMyDisk",
             dependencies: [
-                .product(name: "Sparkle", package: "Sparkle")
+                .product(name: "Sparkle", package: "Sparkle"),
+                .product(name: "GRDB", package: "GRDB.swift")
             ],
             path: "Sources/CheckMyDisk",
             resources: [

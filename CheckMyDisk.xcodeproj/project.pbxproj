@@ -37,6 +37,7 @@
 		A00000000000000000000129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000237 /* AppDelegate.swift */; };
 		A00000000000000000000136 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000238 /* MenuBarContentView.swift */; };
 		A00000000000000000000125 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000802 /* Sparkle */; };
+		A00000000000000000000137 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000804 /* GRDB */; };
 		A00000000000000000000130 /* AppleNVMeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */; };
 		A00000000000000000000131 /* HealthEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000231 /* HealthEvaluatorTests.swift */; };
 		A00000000000000000000132 /* ParserExtendedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000232 /* ParserExtendedTests.swift */; };
@@ -102,6 +103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A00000000000000000000125 /* Sparkle in Frameworks */,
+					A00000000000000000000137 /* GRDB in Frameworks */,
 				A00000000000000000000118 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,6 +260,7 @@
 			name = CheckMyDisk;
 			packageProductDependencies = (
 				A00000000000000000000802 /* Sparkle */,
+				A00000000000000000000804 /* GRDB */,
 			);
 			productName = CheckMyDisk;
 			productReference = A00000000000000000000219 /* CheckMyDisk.app */;
@@ -314,6 +317,7 @@
 			productRefGroup = A00000000000000000000409 /* Products */;
 			packageReferences = (
 				A00000000000000000000801 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				A00000000000000000000803 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -664,6 +668,14 @@
 				minimumVersion = 2.9.4;
 			};
 		};
+		A00000000000000000000803 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -671,6 +683,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A00000000000000000000801 /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
+		};
+		A00000000000000000000804 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A00000000000000000000803 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

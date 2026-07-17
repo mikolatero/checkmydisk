@@ -1,5 +1,5 @@
 import Foundation
-import SQLite3
+import GRDB
 
 struct HistoryPoint: Sendable, Identifiable, Equatable {
     var id: Date { date }
@@ -11,124 +11,141 @@ struct HistoryPoint: Sendable, Identifiable, Equatable {
     let lifetime: Int?
 }
 
-actor SnapshotStore {
-    // Only ever touched from actor-isolated methods; the annotation exists solely
-    // so deinit can close the handle.
-    nonisolated(unsafe) private var db: OpaquePointer?
-    private let encoder = JSONEncoder.pretty
-    private let decoder: JSONDecoder
+/// Stores a lightweight time series of drive health in SQLite via GRDB. History
+/// metrics live in dedicated columns (cheap to store and query); the full JSON of
+/// only the most recent snapshot per drive is retained in `latest_snapshots`.
+/// Uses a `DatabasePool` (WAL) so reads never block the writer.
+final class SnapshotStore: Sendable {
+    private let dbPool: DatabasePool
 
     init(url: URL? = nil) throws {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        self.decoder = decoder
         let databaseURL = try url ?? Self.defaultURL()
         try FileManager.default.createDirectory(at: databaseURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-        var handle: OpaquePointer?
-        if sqlite3_open(databaseURL.path, &handle) != SQLITE_OK {
-            let message = Self.errorMessage(handle)
-            sqlite3_close(handle)
-            throw DatabaseError.openFailed(message)
-        }
-        try Self.execute("""
-        create table if not exists snapshots (
-            id integer primary key autoincrement,
-            device_id text not null,
-            checked_at real not null,
-            state text not null,
-            snapshot_json blob not null,
-            assessment_json blob not null
-        );
-        """, on: handle)
-        try Self.execute("create index if not exists idx_snapshots_device_time on snapshots(device_id, checked_at desc);", on: handle)
-        db = handle
+        dbPool = try DatabasePool(path: databaseURL.path)
+        try Self.migrator.migrate(dbPool)
     }
 
-    deinit {
-        sqlite3_close(db)
+    private static var migrator: DatabaseMigrator {
+        var migrator = DatabaseMigrator()
+        migrator.registerMigration("v2_columnar_schema") { db in
+            // A pre-GRDB build stored one JSON blob per check in a `snapshots` table.
+            // If that legacy table is present (no GRDB migration tracking yet), set it
+            // aside, build the new columnar schema, then import the history from it.
+            let legacyExists = try db.tableExists("snapshots")
+                && (try db.columns(in: "snapshots").contains { $0.name == "snapshot_json" })
+            if legacyExists {
+                try db.execute(sql: "ALTER TABLE snapshots RENAME TO snapshots_legacy_v1")
+            }
+
+            try db.create(table: "snapshots") { t in
+                t.autoIncrementedPrimaryKey("id")
+                t.column("device_id", .text).notNull()
+                t.column("checked_at", .double).notNull()
+                t.column("state", .text).notNull()
+                t.column("temperature", .integer)
+                t.column("health", .integer).notNull()
+                t.column("performance", .integer).notNull()
+                t.column("lifetime", .integer)
+            }
+            try db.create(index: "idx_snapshots_device_time", on: "snapshots", columns: ["device_id", "checked_at"])
+
+            try db.create(table: "latest_snapshots") { t in
+                t.primaryKey("device_id", .text)
+                t.column("checked_at", .double).notNull()
+                t.column("snapshot_json", .blob).notNull()
+                t.column("assessment_json", .blob).notNull()
+            }
+
+            if legacyExists {
+                try importLegacyHistory(db)
+                try db.execute(sql: "DROP TABLE snapshots_legacy_v1")
+            }
+        }
+        return migrator
     }
 
-    func save(snapshot: DriveSnapshot, assessment: DriveAssessment) throws {
-        let snapshotData = try encoder.encode(snapshot)
-        let assessmentData = try encoder.encode(assessment)
-        var statement: OpaquePointer?
-        let sql = "insert into snapshots(device_id, checked_at, state, snapshot_json, assessment_json) values (?, ?, ?, ?, ?);"
-        guard sqlite3_prepare_v2(db, sql, -1, &statement, nil) == SQLITE_OK else {
-            throw DatabaseError.prepareFailed(message)
+    /// Best-effort import of the old JSON-blob history into the columnar table.
+    /// Rows that fail to decode are skipped rather than aborting the migration.
+    private static func importLegacyHistory(_ db: Database) throws {
+        let decoder = JSONDecoder()
+        let rows = try Row.fetchAll(db, sql: "SELECT device_id, checked_at, state, snapshot_json, assessment_json FROM snapshots_legacy_v1")
+        for row in rows {
+            let assessmentData: Data? = row["assessment_json"]
+            guard let assessmentData,
+                  let assessment = try? decoder.decode(PartialAssessment.self, from: assessmentData) else { continue }
+            let snapshotData: Data? = row["snapshot_json"]
+            let temperature = snapshotData.flatMap { try? decoder.decode(PartialSnapshot.self, from: $0) }?.temperature
+            let deviceID: String = row["device_id"]
+            let checkedAt: Double = row["checked_at"]
+            let state: String = row["state"]
+            try db.execute(sql: """
+                INSERT INTO snapshots (device_id, checked_at, state, temperature, health, performance, lifetime)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, arguments: [deviceID, checkedAt, state, temperature, assessment.overallHealth, assessment.overallPerformance, assessment.ssdLifetimeLeft])
         }
-        defer { sqlite3_finalize(statement) }
-        sqlite3_bind_text(statement, 1, snapshot.persistentID, -1, SQLITE_TRANSIENT)
-        sqlite3_bind_double(statement, 2, snapshot.checkedAt.timeIntervalSince1970)
-        sqlite3_bind_text(statement, 3, assessment.smartStatus.rawValue, -1, SQLITE_TRANSIENT)
-        _ = snapshotData.withUnsafeBytes {
-            sqlite3_bind_blob(statement, 4, $0.baseAddress, Int32($0.count), SQLITE_TRANSIENT)
-        }
-        _ = assessmentData.withUnsafeBytes {
-            sqlite3_bind_blob(statement, 5, $0.baseAddress, Int32($0.count), SQLITE_TRANSIENT)
-        }
-        guard sqlite3_step(statement) == SQLITE_DONE else {
-            throw DatabaseError.insertFailed(message)
+    }
+
+    func save(snapshot: DriveSnapshot, assessment: DriveAssessment) async throws {
+        let snapshotData = try JSONEncoder.pretty.encode(snapshot)
+        let assessmentData = try JSONEncoder.pretty.encode(assessment)
+        let deviceID = snapshot.persistentID
+        let checkedAt = snapshot.checkedAt.timeIntervalSince1970
+        let state = assessment.smartStatus.rawValue
+        let temperature = snapshot.temperature
+        let health = assessment.overallHealth
+        let performance = assessment.overallPerformance
+        let lifetime = assessment.ssdLifetimeLeft
+        try await dbPool.write { db in
+            try db.execute(sql: """
+                INSERT INTO snapshots (device_id, checked_at, state, temperature, health, performance, lifetime)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, arguments: [deviceID, checkedAt, state, temperature, health, performance, lifetime])
+            try db.execute(sql: """
+                INSERT INTO latest_snapshots (device_id, checked_at, snapshot_json, assessment_json)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(device_id) DO UPDATE SET
+                    checked_at = excluded.checked_at,
+                    snapshot_json = excluded.snapshot_json,
+                    assessment_json = excluded.assessment_json
+                """, arguments: [deviceID, checkedAt, snapshotData, assessmentData])
         }
     }
 
     /// Chronological history for a drive. `deviceIDs` accepts several candidate
     /// identities (serial number plus legacy scan ids) so rows written by older
     /// versions are not orphaned.
-    func history(deviceIDs: [String], since: Date? = nil) throws -> [HistoryPoint] {
+    func history(deviceIDs: [String], since: Date? = nil) async throws -> [HistoryPoint] {
         guard !deviceIDs.isEmpty else { return [] }
-        let placeholders = deviceIDs.map { _ in "?" }.joined(separator: ", ")
-        var sql = "select checked_at, state, snapshot_json, assessment_json from snapshots where device_id in (\(placeholders))"
+        let placeholders = Array(repeating: "?", count: deviceIDs.count).joined(separator: ", ")
+        var sql = "SELECT checked_at, state, temperature, health, performance, lifetime FROM snapshots WHERE device_id IN (\(placeholders))"
         if since != nil {
-            sql += " and checked_at >= ?"
+            sql += " AND checked_at >= ?"
         }
-        sql += " order by checked_at asc;"
-
-        var statement: OpaquePointer?
-        guard sqlite3_prepare_v2(db, sql, -1, &statement, nil) == SQLITE_OK else {
-            throw DatabaseError.prepareFailed(message)
-        }
-        defer { sqlite3_finalize(statement) }
-        for (index, deviceID) in deviceIDs.enumerated() {
-            sqlite3_bind_text(statement, Int32(index + 1), deviceID, -1, SQLITE_TRANSIENT)
-        }
-        if let since {
-            sqlite3_bind_double(statement, Int32(deviceIDs.count + 1), since.timeIntervalSince1970)
-        }
-
-        var points: [HistoryPoint] = []
-        while sqlite3_step(statement) == SQLITE_ROW {
-            let checkedAt = sqlite3_column_double(statement, 0)
-            let stateText = sqlite3_column_text(statement, 1).map { String(cString: $0) } ?? ""
-            guard let assessmentData = columnData(statement, index: 3),
-                  let assessment = try? decoder.decode(PartialAssessment.self, from: assessmentData) else {
-                continue
+        sql += " ORDER BY checked_at ASC"
+        let query = sql
+        return try await dbPool.read { db in
+            var arguments: [DatabaseValueConvertible] = deviceIDs
+            if let since {
+                arguments.append(since.timeIntervalSince1970)
             }
-            let temperature = columnData(statement, index: 2)
-                .flatMap { try? decoder.decode(PartialSnapshot.self, from: $0) }?
-                .temperature
-            points.append(HistoryPoint(
-                date: Date(timeIntervalSince1970: checkedAt),
-                state: DriveHealthState(rawValue: stateText) ?? assessment.smartStatus,
-                temperature: temperature,
-                health: assessment.overallHealth,
-                performance: assessment.overallPerformance,
-                lifetime: assessment.ssdLifetimeLeft
-            ))
+            return try Row.fetchAll(db, sql: query, arguments: StatementArguments(arguments)).map { row in
+                HistoryPoint(
+                    date: Date(timeIntervalSince1970: row["checked_at"]),
+                    state: DriveHealthState(rawValue: row["state"]) ?? .unknown,
+                    temperature: row["temperature"],
+                    health: row["health"],
+                    performance: row["performance"],
+                    lifetime: row["lifetime"]
+                )
+            }
         }
-        return points
     }
 
-    func pruneHistory(olderThanDays days: Int) throws {
+    func pruneHistory(olderThanDays days: Int) async throws {
         guard days > 0 else { return }
         let cutoff = Date().addingTimeInterval(-Double(days) * 86_400).timeIntervalSince1970
-        var statement: OpaquePointer?
-        guard sqlite3_prepare_v2(db, "delete from snapshots where checked_at < ?;", -1, &statement, nil) == SQLITE_OK else {
-            throw DatabaseError.prepareFailed(message)
-        }
-        defer { sqlite3_finalize(statement) }
-        sqlite3_bind_double(statement, 1, cutoff)
-        guard sqlite3_step(statement) == SQLITE_DONE else {
-            throw DatabaseError.executeFailed(message)
+        try await dbPool.write { db in
+            try db.execute(sql: "DELETE FROM snapshots WHERE checked_at < ?", arguments: [cutoff])
         }
     }
 
@@ -157,57 +174,50 @@ actor SnapshotStore {
         return result
     }
 
-    private func columnData(_ statement: OpaquePointer?, index: Int32) -> Data? {
-        guard let bytes = sqlite3_column_blob(statement, index) else { return nil }
-        let count = Int(sqlite3_column_bytes(statement, index))
-        return Data(bytes: bytes, count: count)
-    }
-
-    private static func execute(_ sql: String, on db: OpaquePointer?) throws {
-        if sqlite3_exec(db, sql, nil, nil, nil) != SQLITE_OK {
-            throw DatabaseError.executeFailed(errorMessage(db))
-        }
-    }
-
-    private static func errorMessage(_ db: OpaquePointer?) -> String {
-        db.flatMap { sqlite3_errmsg($0) }.map { String(cString: $0) } ?? "Unknown SQLite error"
-    }
-
-    private var message: String {
-        Self.errorMessage(db)
-    }
-
     private static func defaultURL() throws -> URL {
         let base = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         return base.appendingPathComponent("CheckMyDisk/checkmydisk.sqlite")
     }
 }
 
+#if DEBUG
+extension SnapshotStore {
+    /// Test seam (debug-only): writes rows in the pre-GRDB legacy schema — one JSON
+    /// blob per check — so the migration path can be exercised without the test
+    /// target depending on GRDB directly.
+    static func makeLegacyDatabaseForTesting(
+        at url: URL,
+        rows: [(deviceID: String, checkedAt: Double, state: String, snapshotJSON: Data, assessmentJSON: Data)]
+    ) throws {
+        let queue = try DatabaseQueue(path: url.path)
+        try queue.write { db in
+            try db.execute(sql: """
+                CREATE TABLE snapshots (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    device_id TEXT NOT NULL,
+                    checked_at REAL NOT NULL,
+                    state TEXT NOT NULL,
+                    snapshot_json BLOB NOT NULL,
+                    assessment_json BLOB NOT NULL
+                );
+                """)
+            for row in rows {
+                try db.execute(sql: """
+                    INSERT INTO snapshots (device_id, checked_at, state, snapshot_json, assessment_json)
+                    VALUES (?, ?, ?, ?, ?)
+                    """, arguments: [row.deviceID, row.checkedAt, row.state, row.snapshotJSON, row.assessmentJSON])
+            }
+        }
+    }
+}
+#endif
+
 private struct PartialSnapshot: Decodable {
     let temperature: Int?
 }
 
 private struct PartialAssessment: Decodable {
-    let smartStatus: DriveHealthState
     let overallHealth: Int
     let overallPerformance: Int
     let ssdLifetimeLeft: Int?
 }
-
-enum DatabaseError: Error, LocalizedError {
-    case openFailed(String)
-    case prepareFailed(String)
-    case executeFailed(String)
-    case insertFailed(String)
-
-    var errorDescription: String? {
-        switch self {
-        case let .openFailed(message): "Could not open SQLite database: \(message)"
-        case let .prepareFailed(message): "Could not prepare SQLite statement: \(message)"
-        case let .executeFailed(message): "Could not execute SQLite statement: \(message)"
-        case let .insertFailed(message): "Could not insert SQLite row: \(message)"
-        }
-    }
-}
-
-private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
