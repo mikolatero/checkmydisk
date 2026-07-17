@@ -3,8 +3,8 @@ import UserNotifications
 
 @main
 struct CheckMyDiskApp: App {
-    @StateObject private var store = DriveStore()
-    @StateObject private var softwareUpdateController = SoftwareUpdateController()
+    @State private var store = DriveStore()
+    @State private var softwareUpdateController = SoftwareUpdateController()
 
     init() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
@@ -13,8 +13,8 @@ struct CheckMyDiskApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(store)
-                .environmentObject(softwareUpdateController)
+                .environment(store)
+                .environment(softwareUpdateController)
                 .frame(minWidth: 1240, minHeight: 760)
                 .task {
                     store.startMonitoring()
@@ -25,8 +25,8 @@ struct CheckMyDiskApp: App {
 
         Settings {
             PreferencesView()
-                .environmentObject(store)
-                .environmentObject(softwareUpdateController)
+                .environment(store)
+                .environment(softwareUpdateController)
                 .frame(width: 520)
         }
     }

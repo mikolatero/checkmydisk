@@ -59,7 +59,7 @@ struct DeviceStatisticsView: View {
 }
 
 struct SelfTestsView: View {
-    @EnvironmentObject private var store: DriveStore
+    @Environment(DriveStore.self) private var store
     let snapshot: DriveSnapshot
 
     var body: some View {

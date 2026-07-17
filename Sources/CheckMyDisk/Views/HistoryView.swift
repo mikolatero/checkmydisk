@@ -2,7 +2,7 @@ import Charts
 import SwiftUI
 
 struct HistoryView: View {
-    @EnvironmentObject private var store: DriveStore
+    @Environment(DriveStore.self) private var store
     let snapshot: DriveSnapshot
 
     @State private var range: HistoryRange = .week

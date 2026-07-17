@@ -6,7 +6,7 @@ struct SidebarSelection: Hashable {
 }
 
 struct ContentView: View {
-    @EnvironmentObject private var store: DriveStore
+    @Environment(DriveStore.self) private var store
 
     var body: some View {
         NavigationSplitView {
@@ -33,7 +33,7 @@ struct ContentView: View {
 }
 
 struct SidebarView: View {
-    @EnvironmentObject private var store: DriveStore
+    @Environment(DriveStore.self) private var store
 
     private var selection: Binding<SidebarSelection?> {
         Binding {
@@ -176,7 +176,7 @@ struct SidebarView: View {
 }
 
 struct DetailView: View {
-    @EnvironmentObject private var store: DriveStore
+    @Environment(DriveStore.self) private var store
 
     var body: some View {
         Group {
@@ -221,7 +221,7 @@ struct DetailView: View {
 }
 
 struct EmptyStateView: View {
-    @EnvironmentObject private var store: DriveStore
+    @Environment(DriveStore.self) private var store
 
     var body: some View {
         VStack(spacing: 18) {

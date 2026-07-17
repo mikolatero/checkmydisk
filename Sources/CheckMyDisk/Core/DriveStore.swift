@@ -1,37 +1,43 @@
 import Foundation
-import UserNotifications
+import Observation
 
 @MainActor
-final class DriveStore: ObservableObject {
-    @Published var settings: AppSettings {
+@Observable
+final class DriveStore {
+    var settings: AppSettings {
         didSet {
             settingsBox.value = settings
             SettingsStore.save(settings)
         }
     }
-    @Published var devices: [SmartDeviceSummary] = []
-    @Published var snapshots: [String: DriveSnapshot] = [:]
-    @Published var assessments: [String: DriveAssessment] = [:]
-    @Published var volumes: [String: [VolumeInfo]] = [:]
-    @Published var selectedDeviceID: String?
-    @Published var selectedSection: DriveSection = .dashboard
-    @Published var isLoading = false
-    @Published var isSelfTestPolling = false
+    var devices: [SmartDeviceSummary] = []
+    var snapshots: [String: DriveSnapshot] = [:]
+    var assessments: [String: DriveAssessment] = [:]
+    var volumes: [String: [VolumeInfo]] = [:]
+    var selectedDeviceID: String?
+    var selectedSection: DriveSection = .dashboard
+    var isLoading = false
+    var isSelfTestPolling = false
     /// Scan/executable failures. Per-device read failures land in `deviceErrors`.
-    @Published var lastError: String?
-    @Published var deviceErrors: [String: String] = [:]
-    @Published var satStatus = SATSupportStatus(kextInstalled: false, pluginInstalled: false, iokitCapableDevices: 0)
+    var lastError: String?
+    var deviceErrors: [String: String] = [:]
+    var satStatus = SATSupportStatus(kextInstalled: false, pluginInstalled: false, iokitCapableDevices: 0)
 
-    private let settingsBox: SettingsBox
-    private lazy var runner = SmartctlRunner { [settingsBox] in
+    @ObservationIgnored private let settingsBox: SettingsBox
+    @ObservationIgnored private lazy var runner = SmartctlRunner { [settingsBox] in
         settingsBox.value
     }
-    private let snapshotStore: SnapshotStore?
-    private var previousStates: [String: DriveHealthState] = [:]
-    private var activeRefresh: Task<Void, Never>?
-    private var monitorTask: Task<Void, Never>?
-    private var selfTestPollingTask: Task<Void, Never>?
-    private var activeSelfTestKind: [String: String] = [:]
+    @ObservationIgnored private let snapshotStore: SnapshotStore?
+    @ObservationIgnored private let notifications = NotificationService()
+    @ObservationIgnored private lazy var selfTests = SelfTestCoordinator(
+        runner: runner,
+        refreshAction: { [weak self] in await self?.refresh() },
+        snapshotProvider: { [weak self] deviceID in self?.snapshots[deviceID] },
+        setPolling: { [weak self] value in self?.isSelfTestPolling = value },
+        reportError: { [weak self] deviceID, message in self?.deviceErrors[deviceID] = message }
+    )
+    @ObservationIgnored private var activeRefresh: Task<Void, Never>?
+    @ObservationIgnored private var monitorTask: Task<Void, Never>?
 
     init(snapshotStore: SnapshotStore? = try? SnapshotStore()) {
         let loaded = SettingsStore.load()
@@ -104,11 +110,11 @@ final class DriveStore: ObservableObject {
         defer { isLoading = false }
         lastError = nil
 
-        async let satUpdate = SATSupportDetector.detect()
-        async let volumeUpdate = VolumeInfoProvider.volumesByDisk()
+        let outcome = await DiagnosticsService.runFullScan(using: runner)
 
-        do {
-            let scanned = try await runner.scan()
+        switch outcome.scan {
+        case let .success(scanData):
+            let scanned = scanData.devices
             devices = scanned
             let knownIDs = Set(scanned.map(\.id))
             snapshots = snapshots.filter { knownIDs.contains($0.key) }
@@ -118,29 +124,7 @@ final class DriveStore: ObservableObject {
                 selectedDeviceID = scanned.first?.id
             }
 
-            let runner = self.runner
-            let results = await withTaskGroup(
-                of: (String, Result<(DriveSnapshot, DriveAssessment), Error>).self,
-                returning: [(String, Result<(DriveSnapshot, DriveAssessment), Error>)].self
-            ) { group in
-                for device in scanned {
-                    group.addTask {
-                        do {
-                            let snapshot = try await runner.readAll(device: device)
-                            return (device.id, .success((snapshot, HealthEvaluator.evaluate(snapshot))))
-                        } catch {
-                            return (device.id, .failure(error))
-                        }
-                    }
-                }
-                var collected: [(String, Result<(DriveSnapshot, DriveAssessment), Error>)] = []
-                for await item in group {
-                    collected.append(item)
-                }
-                return collected
-            }
-
-            for (deviceID, result) in results {
+            for (deviceID, result) in scanData.results {
                 switch result {
                 case let .success((snapshot, assessment)):
                     snapshots[deviceID] = snapshot
@@ -148,22 +132,21 @@ final class DriveStore: ObservableObject {
                     deviceErrors[deviceID] = nil
                     persist(snapshot: snapshot, assessment: assessment)
                     if let device = scanned.first(where: { $0.id == deviceID }) {
-                        notifyIfNeeded(device: device, assessment: assessment)
+                        notifications.notifyIfNeeded(device: device, assessment: assessment, notificationsEnabled: settings.notificationsEnabled)
                     }
                 case let .failure(error):
                     deviceErrors[deviceID] = error.localizedDescription
                 }
             }
-        } catch {
+        case let .failure(error):
             lastError = error.localizedDescription
         }
 
-        satStatus = await satUpdate
-        let volumesByDisk = await volumeUpdate
+        satStatus = outcome.satStatus
         var mappedVolumes: [String: [VolumeInfo]] = [:]
         for device in devices {
             let wholeDisk = VolumeInfoProvider.wholeDiskName(URL(fileURLWithPath: device.name).lastPathComponent)
-            if let deviceVolumes = volumesByDisk[wholeDisk] {
+            if let deviceVolumes = outcome.volumesByDisk[wholeDisk] {
                 mappedVolumes[device.id] = deviceVolumes
             }
         }
@@ -182,69 +165,20 @@ final class DriveStore: ObservableObject {
 
     func startSelfTest(kind: String) async {
         guard let snapshot = selectedSnapshot else { return }
-        let deviceID = snapshot.device.id
-        isSelfTestPolling = true
-        do {
-            try await runner.startSelfTest(device: snapshot.device, kind: kind)
-            activeSelfTestKind[deviceID] = kind
-            await refresh()
-            let estimatedMinutes = snapshots[deviceID]?.activeSelfTest?.estimatedMinutes(forKind: kind)
-                ?? (kind == "short" ? 2 : 90)
-            startSelfTestPolling(for: deviceID, minimumPolls: max(3, estimatedMinutes * 60 / 10))
-        } catch {
-            isSelfTestPolling = false
-            deviceErrors[deviceID] = error.localizedDescription
-        }
+        await selfTests.start(kind: kind, device: snapshot.device)
     }
 
     func cancelSelfTest() async {
         guard let snapshot = selectedSnapshot else { return }
-        let deviceID = snapshot.device.id
-        do {
-            try await runner.abortSelfTest(device: snapshot.device)
-            selfTestPollingTask?.cancel()
-            isSelfTestPolling = false
-            activeSelfTestKind[deviceID] = nil
-            await refresh()
-        } catch {
-            deviceErrors[deviceID] = error.localizedDescription
-        }
+        await selfTests.cancel(device: snapshot.device)
     }
 
     func selfTestKind(for deviceID: String) -> String? {
-        activeSelfTestKind[deviceID]
-    }
-
-    private func startSelfTestPolling(for deviceID: String, minimumPolls: Int) {
-        selfTestPollingTask?.cancel()
-        isSelfTestPolling = true
-        let maxPolls = max(180, minimumPolls * 3)
-        selfTestPollingTask = Task { [weak self] in
-            var sawRunningStatus = false
-            for pollIndex in 0..<maxPolls {
-                if Task.isCancelled { break }
-                try? await Task.sleep(for: .seconds(10))
-                guard let self else { return }
-                await self.refresh()
-                let stillRunning = self.snapshots[deviceID]?.activeSelfTest?.isRunning == true
-                sawRunningStatus = sawRunningStatus || stillRunning
-                if !stillRunning, sawRunningStatus || pollIndex >= minimumPolls {
-                    break
-                }
-            }
-            guard let self else { return }
-            self.isSelfTestPolling = false
-            self.activeSelfTestKind[deviceID] = nil
-        }
+        selfTests.kind(for: deviceID)
     }
 
     func saveSettings() {
         SettingsStore.save(settings)
-    }
-
-    static func shouldNotify(previous: DriveHealthState?, new: DriveHealthState) -> Bool {
-        guard let previous else { return false }
-        return new.severity > previous.severity && new.severity > DriveHealthState.ok.severity
     }
 
     private func persist(snapshot: DriveSnapshot, assessment: DriveAssessment) {
@@ -252,17 +186,6 @@ final class DriveStore: ObservableObject {
         Task.detached {
             try? await snapshotStore.save(snapshot: snapshot, assessment: assessment)
         }
-    }
-
-    private func notifyIfNeeded(device: SmartDeviceSummary, assessment: DriveAssessment) {
-        let previous = previousStates[device.id]
-        previousStates[device.id] = assessment.smartStatus
-        guard settings.notificationsEnabled, Self.shouldNotify(previous: previous, new: assessment.smartStatus) else { return }
-
-        let content = UNMutableNotificationContent()
-        content.title = "CheckMyDisk: \(assessment.smartStatus.rawValue)"
-        content.body = String(localized: "\(device.displayName) has \(assessment.issueCount) health issue(s).")
-        UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)) { _ in }
     }
 }
 

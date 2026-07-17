@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct PreferencesView: View {
-    @EnvironmentObject private var store: DriveStore
-    @EnvironmentObject private var softwareUpdateController: SoftwareUpdateController
+    @Environment(DriveStore.self) private var store
+    @Environment(SoftwareUpdateController.self) private var softwareUpdateController
 
     var body: some View {
+        @Bindable var store = store
         Form {
             Section("smartctl Backend") {
                 Picker("Mode", selection: $store.settings.smartctlMode) {

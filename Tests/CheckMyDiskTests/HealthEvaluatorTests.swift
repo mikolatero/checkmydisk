@@ -127,13 +127,13 @@ final class HealthEvaluatorTests: XCTestCase {
 
     @MainActor
     func testShouldNotifyRules() {
-        XCTAssertFalse(DriveStore.shouldNotify(previous: nil, new: .failed), "primer estado no notifica")
-        XCTAssertFalse(DriveStore.shouldNotify(previous: .unknown, new: .ok), "unknown → ok no es un empeoramiento")
-        XCTAssertTrue(DriveStore.shouldNotify(previous: .unknown, new: .warning))
-        XCTAssertTrue(DriveStore.shouldNotify(previous: .ok, new: .warning))
-        XCTAssertTrue(DriveStore.shouldNotify(previous: .warning, new: .failed))
-        XCTAssertFalse(DriveStore.shouldNotify(previous: .warning, new: .ok), "mejorar no notifica")
-        XCTAssertFalse(DriveStore.shouldNotify(previous: .failed, new: .failed))
+        XCTAssertFalse(NotificationService.shouldNotify(previous: nil, new: .failed), "primer estado no notifica")
+        XCTAssertFalse(NotificationService.shouldNotify(previous: .unknown, new: .ok), "unknown → ok no es un empeoramiento")
+        XCTAssertTrue(NotificationService.shouldNotify(previous: .unknown, new: .warning))
+        XCTAssertTrue(NotificationService.shouldNotify(previous: .ok, new: .warning))
+        XCTAssertTrue(NotificationService.shouldNotify(previous: .warning, new: .failed))
+        XCTAssertFalse(NotificationService.shouldNotify(previous: .warning, new: .ok), "mejorar no notifica")
+        XCTAssertFalse(NotificationService.shouldNotify(previous: .failed, new: .failed))
     }
 
     // MARK: - Fixtures

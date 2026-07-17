@@ -1,13 +1,15 @@
 import Combine
 import Foundation
+import Observation
 import Sparkle
 
 @MainActor
-final class SoftwareUpdateController: ObservableObject {
-    @Published private(set) var canCheckForUpdates = false
+@Observable
+final class SoftwareUpdateController {
+    private(set) var canCheckForUpdates = false
 
-    private let updaterController: SPUStandardUpdaterController
-    private var canCheckForUpdatesObserver: AnyCancellable?
+    @ObservationIgnored private let updaterController: SPUStandardUpdaterController
+    @ObservationIgnored private var canCheckForUpdatesObserver: AnyCancellable?
 
     init() {
         updaterController = SPUStandardUpdaterController(

@@ -3,7 +3,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DashboardView: View {
-    @EnvironmentObject private var store: DriveStore
+    @Environment(DriveStore.self) private var store
     let snapshot: DriveSnapshot
     let assessment: DriveAssessment
 
