@@ -156,9 +156,9 @@ struct SelfTestProgressBanner: View {
 }
 
 struct TableOrEmpty<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     let isEmpty: Bool
-    let emptyText: String
+    let emptyText: LocalizedStringKey
     @ViewBuilder let content: Content
 
     var body: some View {

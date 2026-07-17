@@ -29,7 +29,7 @@ struct CompatibilityPanel: View {
         }
     }
 
-    private func statusPill(_ text: String, ok: Bool) -> some View {
+    private func statusPill(_ text: LocalizedStringKey, ok: Bool) -> some View {
         Label(text, systemImage: ok ? "checkmark.circle.fill" : "questionmark.circle.fill")
             .font(.caption)
             .foregroundStyle(ok ? .green : .yellow)
