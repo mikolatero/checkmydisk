@@ -82,7 +82,11 @@ enum TrendAnalyzer {
     }
 
     private static func isCritical(_ attribute: SmartAttribute) -> Bool {
-        if criticalIDs.contains(attribute.id) { return true }
+        // The ATA IDs apply only to real ATA attributes. Synthetic NVMe attributes
+        // reuse sequential IDs (e.g. "Error Log Entries" happens to be id 5), so
+        // they must be matched by name only — otherwise a benign NVMe error-log
+        // entry (common on Apple's internal NVMe) would raise a false critical alert.
+        if attribute.isSynthetic != true, criticalIDs.contains(attribute.id) { return true }
         let name = attribute.name.lowercased()
         return criticalKeywords.contains { name.contains($0) }
     }

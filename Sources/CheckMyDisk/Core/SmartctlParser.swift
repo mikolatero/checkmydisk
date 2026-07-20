@@ -239,7 +239,12 @@ enum SmartctlParser {
     }
 
     private static func parseErrors(_ root: SmartJSON) -> [SmartErrorEntry] {
-        root["table"].objects.enumerated().map { index, row in
+        // smartctl nests the ATA error table differently across versions and logs:
+        // directly under the log, or under "extended" / "summary".
+        var rows = root["table"].objects
+        if rows.isEmpty { rows = root["extended"]["table"].objects }
+        if rows.isEmpty { rows = root["summary"]["table"].objects }
+        return rows.enumerated().map { index, row in
             SmartErrorEntry(
                 id: row["error_number"].int ?? index + 1,
                 lifetimeHours: row["lifetime_hours"].int,

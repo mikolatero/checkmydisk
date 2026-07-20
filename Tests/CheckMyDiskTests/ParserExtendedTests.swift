@@ -239,6 +239,21 @@ final class ParserExtendedTests: XCTestCase {
         XCTAssertEqual(VolumeInfoProvider.physicalDisks(forContainer: "disk9", topology: VolumeInfoProvider.DiskTopology()), ["disk9"])
     }
 
+    func testParsesATAErrorLogUnderExtended() throws {
+        let json = """
+        {
+          "model_name": "HDD",
+          "ata_smart_error_log": {"extended": {"table": [
+            {"error_number": 1, "lifetime_hours": 100, "error_description": "UNC error", "prior_command": "READ DMA"}
+          ]}}
+        }
+        """
+        let snapshot = try SmartctlParser.parseSnapshot(Data(json.utf8), fallbackDevice: device)
+        XCTAssertEqual(snapshot.errorLog.count, 1)
+        XCTAssertEqual(snapshot.errorLog.first?.errors, "UNC error")
+        XCTAssertEqual(snapshot.errorLog.first?.lifetimeHours, 100)
+    }
+
     func testPDFReportRendersValidMultiSectionDocument() throws {
         let json = """
         {

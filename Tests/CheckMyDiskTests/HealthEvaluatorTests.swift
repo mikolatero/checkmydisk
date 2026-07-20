@@ -176,6 +176,30 @@ final class HealthEvaluatorTests: XCTestCase {
         XCTAssertNil(TrendAnalyzer.estimateRemainingLife(from: points, asOf: start.addingTimeInterval(9 * 86_400)))
     }
 
+    func testNVMeErrorLogEntriesIsNotFlaggedCritical() throws {
+        func nvmeJSON(media: Int, errLog: Int) -> String {
+            """
+            {"model_name":"NVMe","smart_status":{"passed":true},
+             "nvme_smart_health_information_log":{"critical_warning":0,"temperature":35,"available_spare":100,"available_spare_threshold":10,"percentage_used":1,"media_errors":\(media),"num_err_log_entries":\(errLog),"power_on_hours":10,"power_cycles":2,"data_units_read":1,"data_units_written":1}}
+            """
+        }
+        let previous = try SmartctlParser.parseSnapshot(Data(nvmeJSON(media: 0, errLog: 0).utf8), fallbackDevice: device)
+        let current = try SmartctlParser.parseSnapshot(Data(nvmeJSON(media: 1, errLog: 5).utf8), fallbackDevice: device)
+        let increases = TrendAnalyzer.criticalIncreases(current: current, previous: previous)
+        XCTAssertTrue(increases.contains { $0.name == "Media Errors" })
+        XCTAssertFalse(increases.contains { $0.name == "Error Log Entries" }, "un error-log NVMe benigno no debe marcarse como crítico")
+    }
+
+    func testNVMeMediaErrorsReducePerformance() throws {
+        let json = """
+        {"model_name":"NVMe","smart_status":{"passed":true},
+         "nvme_smart_health_information_log":{"critical_warning":0,"temperature":35,"available_spare":100,"available_spare_threshold":10,"percentage_used":1,"media_errors":3,"num_err_log_entries":0}}
+        """
+        let snapshot = try SmartctlParser.parseSnapshot(Data(json.utf8), fallbackDevice: device)
+        let assessment = HealthEvaluator.evaluate(snapshot)
+        XCTAssertLessThanOrEqual(assessment.overallPerformance, 60, "media errors deben restar rendimiento con independencia del idioma")
+    }
+
     private func ataSnapshotJSON(reallocated: Int) -> String {
         """
         {

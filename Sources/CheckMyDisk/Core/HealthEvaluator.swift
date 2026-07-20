@@ -188,7 +188,8 @@ enum HealthEvaluator {
             let comfortable = snapshot.isRotational == true ? 45 : 55
             score -= max(0, temperature - comfortable)
         }
-        if problems.contains(where: { $0.title.localizedCaseInsensitiveContains("media errors") }) {
+        // Key off the underlying data, not the (localized) problem title.
+        if (snapshot.nvme?.mediaErrors ?? 0) > 0 {
             score -= 40
         }
         if snapshot.attributes.contains(where: { [188, 199].contains($0.id) && $0.isSynthetic != true && $0.status != .ok }) {

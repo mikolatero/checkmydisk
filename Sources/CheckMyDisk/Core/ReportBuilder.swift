@@ -100,8 +100,11 @@ enum DriveUsageMetrics {
                 return raw.multipliedReportingOverflow(by: 32 * 1_048_576).partialValue
             }
 
-            if name.contains("gib") || name.contains("gb") {
+            if name.contains("gib") {
                 return raw.multipliedReportingOverflow(by: 1_073_741_824).partialValue
+            }
+            if name.contains("gb") {
+                return raw.multipliedReportingOverflow(by: 1_000_000_000).partialValue
             }
         }
 

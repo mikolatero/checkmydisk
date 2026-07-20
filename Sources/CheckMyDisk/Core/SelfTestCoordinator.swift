@@ -71,6 +71,10 @@ final class SelfTestCoordinator {
             for pollIndex in 0..<maxPolls {
                 if Task.isCancelled { break }
                 try? await Task.sleep(for: .seconds(10))
+                // A cancelled poll (test restarted, or started on another drive) must
+                // not fall through to the shared cleanup below — that would clear the
+                // polling flag/kind that the replacement poll just set.
+                if Task.isCancelled { return }
                 guard let self else { return }
                 await self.refreshAction()
                 let stillRunning = self.snapshotProvider(deviceID)?.activeSelfTest?.isRunning == true
