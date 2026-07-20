@@ -48,6 +48,13 @@
 		A00000000000000000000133 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000233 /* ParserTests.swift */; };
 		A00000000000000000000134 /* ProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000234 /* ProcessRunnerTests.swift */; };
 		A00000000000000000000135 /* SnapshotStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000235 /* SnapshotStoreTests.swift */; };
+		A00000000000000000000142 /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000243 /* HelperProtocol.swift */; };
+		A00000000000000000000143 /* HelperService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000244 /* HelperService.swift */; };
+		A00000000000000000000144 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000245 /* main.swift */; };
+		A00000000000000000000145 /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000246 /* HelperProtocol.swift */; };
+		A00000000000000000000146 /* HelperClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000247 /* HelperClient.swift */; };
+		A00000000000000000000147 /* com.checkmydisk.CheckMyDiskHelper.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = A00000000000000000000248 /* com.checkmydisk.CheckMyDiskHelper.plist */; };
+		A00000000000000000000148 /* CheckMyDiskHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = A00000000000000000000249 /* CheckMyDiskHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +65,39 @@
 			remoteGlobalIDString = A00000000000000000000501;
 			remoteInfo = CheckMyDisk;
 		};
+		A00000000000000000000704 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000502 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000504;
+			remoteInfo = CheckMyDiskHelper;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A00000000000000000000308 /* Embed Helper Executable */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				A00000000000000000000148 /* CheckMyDiskHelper in CopyFiles */,
+			);
+			name = "Embed Helper Executable";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000309 /* Embed Helper LaunchDaemon */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Contents/Library/LaunchDaemons";
+			dstSubfolderSpec = 1;
+			files = (
+				A00000000000000000000147 /* com.checkmydisk.CheckMyDiskHelper.plist in CopyFiles */,
+			);
+			name = "Embed Helper LaunchDaemon";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A00000000000000000000201 /* CheckMyDiskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMyDiskApp.swift; sourceTree = "<group>"; };
@@ -103,6 +142,13 @@
 		A00000000000000000000234 /* ProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunnerTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000235 /* SnapshotStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStoreTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000236 /* CheckMyDiskTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheckMyDiskTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000243 /* HelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperProtocol.swift; sourceTree = "<group>"; };
+		A00000000000000000000244 /* HelperService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperService.swift; sourceTree = "<group>"; };
+		A00000000000000000000245 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		A00000000000000000000246 /* HelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HelperProtocol.swift; path = HelperProtocol.swift; sourceTree = "<group>"; };
+		A00000000000000000000247 /* HelperClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperClient.swift; sourceTree = "<group>"; };
+		A00000000000000000000248 /* com.checkmydisk.CheckMyDiskHelper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.checkmydisk.CheckMyDiskHelper.plist; sourceTree = "<group>"; };
+		A00000000000000000000249 /* CheckMyDiskHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CheckMyDiskHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000402 /* Sources/CheckMyDisk */,
+				A00000000000000000000412 /* Sources/CheckMyDiskHelper */,
 				A00000000000000000000411 /* Config */,
 				A00000000000000000000410 /* Tests/CheckMyDiskTests */,
 				A00000000000000000000408 /* Frameworks */,
@@ -154,6 +201,7 @@
 				A00000000000000000000201 /* CheckMyDiskApp.swift */,
 				A00000000000000000000225 /* SoftwareUpdateController.swift */,
 					A00000000000000000000237 /* AppDelegate.swift */,
+				A00000000000000000000246 /* HelperProtocol.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -177,6 +225,7 @@
 					A00000000000000000000239 /* TrendAnalyzer.swift */,
 					A00000000000000000000240 /* SelfTestScheduler.swift */,
 					A00000000000000000000242 /* PDFReportBuilder.swift */,
+				A00000000000000000000247 /* HelperClient.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -229,6 +278,7 @@
 			children = (
 				A00000000000000000000219 /* CheckMyDisk.app */,
 				A00000000000000000000236 /* CheckMyDiskTests.xctest */,
+				A00000000000000000000249 /* CheckMyDiskHelper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -250,8 +300,19 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000226 /* CheckMyDisk-Info.plist */,
+				A00000000000000000000248 /* com.checkmydisk.CheckMyDiskHelper.plist */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000412 /* Sources/CheckMyDiskHelper */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000245 /* main.swift */,
+				A00000000000000000000244 /* HelperService.swift */,
+				A00000000000000000000243 /* HelperProtocol.swift */,
+			);
+			path = Sources/CheckMyDiskHelper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,10 +325,13 @@
 				A00000000000000000000302 /* Sources */,
 				A00000000000000000000301 /* Frameworks */,
 				A00000000000000000000303 /* Resources */,
+				A00000000000000000000308 /* Embed Helper Executable */,
+				A00000000000000000000309 /* Embed Helper LaunchDaemon */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A00000000000000000000703 /* PBXTargetDependency */,
 			);
 			name = CheckMyDisk;
 			packageProductDependencies = (
@@ -296,6 +360,21 @@
 			productReference = A00000000000000000000236 /* CheckMyDiskTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		A00000000000000000000504 /* CheckMyDiskHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000610 /* Build configuration list for PBXNativeTarget "CheckMyDiskHelper" */;
+			buildPhases = (
+				A00000000000000000000307 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CheckMyDiskHelper;
+			productName = CheckMyDiskHelper;
+			productReference = A00000000000000000000249 /* CheckMyDiskHelper */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -312,6 +391,9 @@
 					A00000000000000000000503 = {
 						CreatedOnToolsVersion = 26.0;
 						TestTargetID = A00000000000000000000501;
+					};
+					A00000000000000000000504 = {
+						CreatedOnToolsVersion = 26.0;
 					};
 				};
 			};
@@ -336,6 +418,7 @@
 			targets = (
 				A00000000000000000000501 /* CheckMyDisk */,
 				A00000000000000000000503 /* CheckMyDiskTests */,
+				A00000000000000000000504 /* CheckMyDiskHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -394,6 +477,8 @@
 					A00000000000000000000141 /* PDFReportBuilder.swift in Sources */,
 					A00000000000000000000129 /* AppDelegate.swift in Sources */,
 					A00000000000000000000136 /* MenuBarContentView.swift in Sources */,
+				A00000000000000000000145 /* HelperProtocol.swift in Sources */,
+				A00000000000000000000146 /* HelperClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +495,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A00000000000000000000307 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000144 /* main.swift in Sources */,
+				A00000000000000000000143 /* HelperService.swift in Sources */,
+				A00000000000000000000142 /* HelperProtocol.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -417,6 +512,11 @@
 			isa = PBXTargetDependency;
 			target = A00000000000000000000501 /* CheckMyDisk */;
 			targetProxy = A00000000000000000000702 /* PBXContainerItemProxy */;
+		};
+		A00000000000000000000703 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000504 /* CheckMyDiskHelper */;
+			targetProxy = A00000000000000000000704 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -643,6 +743,52 @@
 			};
 			name = Release;
 		};
+		A00000000000000000000611 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 3;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CheckMyDiskHelper;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDiskHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A00000000000000000000612 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 3;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CheckMyDiskHelper;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkmydisk.CheckMyDiskHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -669,6 +815,15 @@
 			buildConfigurations = (
 				A00000000000000000000607 /* Debug */,
 				A00000000000000000000608 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000610 /* Build configuration list for PBXNativeTarget "CheckMyDiskHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000611 /* Debug */,
+				A00000000000000000000612 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

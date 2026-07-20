@@ -167,11 +167,17 @@ final class SmartctlRunner: @unchecked Sendable {
     }
 
     private func run(_ arguments: [String], timeoutSeconds: Double? = nil) async throws -> SmartctlOutput {
+        let settings = settingsProvider()
+        let timeout = timeoutSeconds ?? max(5, settings.commandTimeoutSeconds)
+        // Prefer the privileged helper when it is installed (it can read SATA/USB
+        // drives that need root); otherwise run smartctl directly as the current
+        // user — the default behaviour when no helper is present.
+        if let output = await HelperClient.shared.runSmartctl(arguments: arguments, timeoutSeconds: timeout) {
+            return output
+        }
         guard let executable = resolvedExecutable() else {
             throw SmartctlError.executableNotFound
         }
-        let settings = settingsProvider()
-        let timeout = timeoutSeconds ?? max(5, settings.commandTimeoutSeconds)
         let result = try await ProcessRunner.run(executable.url, arguments: arguments, timeout: .seconds(timeout))
         return SmartctlOutput(
             stdout: result.stdout,

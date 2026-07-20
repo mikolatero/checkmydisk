@@ -2073,6 +2073,86 @@
           }
         }
       }
+    },
+    "Privileged Helper": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayudante con privilegios"
+          }
+        }
+      }
+    },
+    "SATA/USB access with root": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acceso SATA/USB con root"
+          }
+        }
+      }
+    },
+    "Installed": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instalado"
+          }
+        }
+      }
+    },
+    "Needs approval in System Settings": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Necesita aprobación en Ajustes del Sistema"
+          }
+        }
+      }
+    },
+    "Not installed": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No instalado"
+          }
+        }
+      }
+    },
+    "Remove Helper": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quitar ayudante"
+          }
+        }
+      }
+    },
+    "Install Helper…": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instalar ayudante…"
+          }
+        }
+      }
+    },
+    "Installs a small privileged tool so smartctl can read SATA/USB drives that require root. Needs approval in System Settings; the app works without it.": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instala una pequeña herramienta con privilegios para que smartctl pueda leer discos SATA/USB que requieren root. Necesita aprobación en Ajustes del Sistema; la app funciona sin ella."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

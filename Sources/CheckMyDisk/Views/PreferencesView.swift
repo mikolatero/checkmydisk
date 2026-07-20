@@ -4,6 +4,8 @@ import SwiftUI
 struct PreferencesView: View {
     @Environment(DriveStore.self) private var store
     @Environment(SoftwareUpdateController.self) private var softwareUpdateController
+    @State private var helperStatus = HelperClient.shared.status
+    @State private var helperError: String?
 
     private var launchAtLoginBinding: Binding<Bool> {
         Binding {
@@ -20,6 +22,36 @@ struct PreferencesView: View {
                 // location); the toggle re-reads the real status on the next render.
             }
         }
+    }
+
+    private var helperStatusText: LocalizedStringKey {
+        switch helperStatus {
+        case .enabled: "Installed"
+        case .requiresApproval: "Needs approval in System Settings"
+        default: "Not installed"
+        }
+    }
+
+    private var helperStatusColor: Color {
+        switch helperStatus {
+        case .enabled: .green
+        case .requiresApproval: .orange
+        default: .secondary
+        }
+    }
+
+    private func setHelper(installed: Bool) {
+        do {
+            if installed {
+                try HelperClient.shared.register()
+            } else {
+                try HelperClient.shared.unregister()
+            }
+            helperError = nil
+        } catch {
+            helperError = error.localizedDescription
+        }
+        helperStatus = HelperClient.shared.status
     }
 
     var body: some View {
@@ -40,6 +72,23 @@ struct PreferencesView: View {
                         Text("\(Int(store.settings.commandTimeoutSeconds)) s")
                     }
                 }
+            }
+
+            Section("Privileged Helper") {
+                LabeledContent("SATA/USB access with root") {
+                    Text(helperStatusText).foregroundStyle(helperStatusColor)
+                }
+                if helperStatus == .enabled {
+                    Button("Remove Helper") { setHelper(installed: false) }
+                } else {
+                    Button("Install Helper…") { setHelper(installed: true) }
+                }
+                if let helperError {
+                    Text(helperError).font(.caption).foregroundStyle(.red)
+                }
+                Text("Installs a small privileged tool so smartctl can read SATA/USB drives that require root. Needs approval in System Settings; the app works without it.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Section("Startup") {

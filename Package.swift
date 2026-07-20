@@ -8,7 +8,8 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "CheckMyDisk", targets: ["CheckMyDisk"])
+        .executable(name: "CheckMyDisk", targets: ["CheckMyDisk"]),
+        .executable(name: "CheckMyDiskHelper", targets: ["CheckMyDiskHelper"])
     ],
     dependencies: [
         .package(url: "https://github.com/sparkle-project/Sparkle", .upToNextMajor(from: "2.9.4")),
@@ -28,6 +29,10 @@ let package = Package(
             linkerSettings: [
                 .linkedLibrary("sqlite3")
             ]
+        ),
+        .executableTarget(
+            name: "CheckMyDiskHelper",
+            path: "Sources/CheckMyDiskHelper"
         ),
         .testTarget(
             name: "CheckMyDiskTests",
