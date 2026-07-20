@@ -23,6 +23,7 @@ It uses a dual `smartctl` backend:
 - Text and JSON report export with optional serial-number/WWN anonymization
 - Robust process handling: concurrent pipe draining, per-command timeout, child-process cleanup on cancellation, parallel per-drive reads with per-device error reporting
 - USB/SAT compatibility detection for `SATSMARTDriver.kext` and `SATSMARTLib.plugin`
+- Optional privileged helper (a `launchd` daemon registered via `SMAppService`) that runs `smartctl` as root for SATA/USB bridges that refuse SMART without elevated access; the app runs `smartctl` directly when it is not installed
 - While-open periodic refresh and local notifications for worsening health states
 - Localized UI (English and Spanish), follows the system light/dark appearance
 
@@ -148,7 +149,69 @@ The script increments the patch version and build number only in the application
 
 ## USB / FireWire / SAT
 
-macOS does not expose SMART data for many USB/SAT enclosures by default. CheckMyDisk reads any external drive that `smartctl` can see, detects common SATSMARTDriver installation paths, and shows guidance when external SMART support is unavailable. It does not install kernel extensions.
+macOS does not expose SMART data for many USB/SAT enclosures by default. CheckMyDisk reads any external drive that `smartctl` can see, detects common SATSMARTDriver installation paths, and shows guidance when external SMART support is unavailable. It does not install kernel extensions. For enclosures that expose SMART only with root privileges, an optional privileged helper can run `smartctl` as root — see [Privileged Helper](#privileged-helper-root-smart-access).
+
+## Privileged Helper (root SMART access)
+
+Some SATA and USB bridges refuse SMART pass-through unless `smartctl` runs as
+root. For those drives CheckMyDisk can install a small privileged helper
+(`CheckMyDiskHelper`) — a `launchd` daemon embedded in the app bundle
+(`Contents/MacOS/CheckMyDiskHelper` plus a launch daemon property list in
+`Contents/Library/LaunchDaemons/`) and registered through `SMAppService`. The
+helper exposes a single XPC method and **only ever runs the bundled `smartctl`**
+— never an arbitrary command — with a per-call timeout.
+
+The helper is **optional**. When it is not installed, CheckMyDisk runs
+`smartctl` directly as the current user; this is the default behavior and reads
+Apple internal NVMe and most enclosures fine. You only need the helper for
+bridges that return permission errors without root.
+
+### Install / remove
+
+Settings → **Privileged Helper**:
+
+- **Install Helper…** registers the daemon; macOS then lists it in
+  **System Settings → General → Login Items & Extensions** ("Allow in the
+  background"). Approve it there — until then the status reads *Needs approval in
+  System Settings*.
+- **Remove Helper** unregisters it.
+
+### Requirements
+
+Registering a privileged daemon through `SMAppService` is strict. All three must
+hold, or `register()` fails and the app stays on the direct-`smartctl` fallback:
+
+1. **A stable code-signing identity** — a Developer ID Application certificate
+   (or an Apple Development certificate with a stable Team ID). An **ad-hoc**
+   signature (`codesign -s -`, the default build) is rejected.
+2. **A stable install location** — move the app to `/Applications`. A copy run
+   from Derived Data, the Desktop, or a quarantined/translocated download is
+   rejected.
+3. **User approval** in System Settings (above).
+
+Because of requirement 1, the default **ad-hoc distribution embeds the helper
+but leaves it dormant** — the same signing dependency as notarization. The
+privileged path is compile-verified and embedded, but it does not register until
+you produce a Developer ID–signed build.
+
+### Activating it (Developer ID build)
+
+Set the signing environment variables (see
+[Developer ID signing and notarization](#optional-developer-id-signing-and-notarization)),
+build, then install:
+
+```sh
+export DEVELOPER_ID_APP_IDENTITY="Developer ID Application: Your Name (TEAMID)"
+export DEVELOPMENT_TEAM="TEAMID"
+export NOTARY_PROFILE="checkmydisk-notary"
+Scripts/prepare_update.sh "helper test build"
+# copy the built .app to /Applications, launch it,
+# Settings > Privileged Helper > Install Helper…, then approve in System Settings
+```
+
+Requires a paid Apple Developer account. Without one the app is still fully
+functional through the direct `smartctl` fallback; the helper only adds coverage
+for SATA/USB bridges that need root.
 
 ## Licensing Note
 
