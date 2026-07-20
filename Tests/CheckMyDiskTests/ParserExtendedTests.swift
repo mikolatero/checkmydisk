@@ -201,6 +201,44 @@ final class ParserExtendedTests: XCTestCase {
         XCTAssertEqual(VolumeInfoProvider.wholeDiskName("notadisk"), "notadisk")
     }
 
+    // MARK: - Topología (Fusion Drive / AppleRAID)
+
+    func testParseAPFSStoresKeepsAllPhysicalStores() {
+        let plist: [String: Any] = ["AllDisksAndPartitions": [
+            ["DeviceIdentifier": "disk3", "APFSPhysicalStores": [["DeviceIdentifier": "disk0s2"], ["DeviceIdentifier": "disk1s2"]]]
+        ]]
+        XCTAssertEqual(VolumeInfoProvider.parseAPFSStores(plist)["disk3"], ["disk0", "disk1"])
+    }
+
+    func testParseCoreStorageMapsFusionLogicalVolumeToMembers() {
+        let plist: [String: Any] = ["CoreStorageLogicalVolumeGroups": [[
+            "CoreStoragePhysicalVolumes": [["DeviceIdentifier": "disk0s2"], ["DeviceIdentifier": "disk1s2"]],
+            "CoreStorageLogicalVolumeFamilies": [["CoreStorageLogicalVolumes": [["DeviceIdentifier": "disk2"]]]]
+        ]]]
+        XCTAssertEqual(VolumeInfoProvider.parseCoreStorageMembers(plist)["disk2"], ["disk0", "disk1"])
+    }
+
+    func testParseAppleRAIDMapsSetToMembers() {
+        let plist: [String: Any] = ["AppleRAIDSets": [[
+            "BSDName": "disk5", "Members": [["BSDName": "disk1s2"], ["BSDName": "disk2s2"]]
+        ]]]
+        XCTAssertEqual(VolumeInfoProvider.parseAppleRAIDMembers(plist)["disk5"], ["disk1", "disk2"])
+    }
+
+    func testPhysicalDisksExpandsAggregateElseFallsBack() {
+        var fusion = VolumeInfoProvider.DiskTopology()
+        fusion.apfsStores = ["disk3": ["disk2"]]
+        fusion.aggregateMembers = ["disk2": ["disk0", "disk1"]]
+        XCTAssertEqual(VolumeInfoProvider.physicalDisks(forContainer: "disk3", topology: fusion), ["disk0", "disk1"])
+
+        var plain = VolumeInfoProvider.DiskTopology()
+        plain.apfsStores = ["disk3": ["disk0"]]
+        XCTAssertEqual(VolumeInfoProvider.physicalDisks(forContainer: "disk3", topology: plain), ["disk0"])
+
+        // Unknown container falls back to itself.
+        XCTAssertEqual(VolumeInfoProvider.physicalDisks(forContainer: "disk9", topology: VolumeInfoProvider.DiskTopology()), ["disk9"])
+    }
+
     private let extendedATAJSON = """
     {
       "model_name": "WDC WD40EFRX",
