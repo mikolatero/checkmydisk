@@ -1,11 +1,29 @@
-CheckMyDisk can use smartctl from smartmontools.
+CheckMyDisk — Third-Party Notices
+=================================
 
-smartmontools is free software distributed under the GNU General Public License.
-Home page: https://www.smartmontools.org/
+smartctl (smartmontools)
+------------------------
+CheckMyDisk can run smartctl, from the smartmontools project, to read S.M.A.R.T.
+data. When a release build bundles the smartctl binary, that binary is licensed
+under the GNU General Public License, version 2 or later (GPL-2.0-or-later).
 
-If a bundled smartctl binary is shipped with a release build, that release must
-include the matching license notice and source-offer information required by GPL.
+    Copyright (C) 2002-2024 Bruce Allen, Christian Franke and the smartmontools
+    contributors.
+    Home page:   https://www.smartmontools.org/
+    Source code: https://github.com/smartmontools/smartmontools
 
-External USB/FireWire SMART access on macOS may require SATSMARTDriver or another
-driver exposing SAT pass-through to smartctl. CheckMyDisk v1 detects support and
-guides the user, but does not install kernel extensions.
+Written offer (GPL-2.0 section 3b): for any release that bundles the smartctl
+binary, the CheckMyDisk maintainers will provide, on request and for at least
+three years, the complete corresponding source code of that exact smartctl build,
+for a charge no more than the cost of physically performing source distribution.
+To request it, open an issue at https://github.com/mikolatero/checkmydisk
+
+The full text of the GNU General Public License, version 2, is available at
+https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt and is included with the
+smartmontools source distribution referenced above.
+
+External USB / FireWire SMART access
+------------------------------------
+macOS may require SATSMARTDriver or another driver exposing SAT pass-through to
+smartctl. CheckMyDisk detects support and guides the user, but does not install
+kernel extensions.

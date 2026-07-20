@@ -80,16 +80,30 @@ mkdir -p "$DERIVED_DATA_DIR" "$DIST_DIR" "$DOCS_DIR"
 rm -rf "$APPCAST_WORK_DIR"
 mkdir -p "$APPCAST_WORK_DIR"
 
+# Signing mode: ad-hoc by default; Developer ID + hardened runtime + notarization
+# only when DEVELOPER_ID_APP_IDENTITY (plus DEVELOPMENT_TEAM and NOTARY_PROFILE)
+# are set in the environment. With none set, this builds exactly as before.
+SIGN_ARGS=(CODE_SIGN_STYLE=Manual)
+NOTARIZE=0
+if [[ -n "${DEVELOPER_ID_APP_IDENTITY:-}" ]]; then
+    require_command xcrun
+    [[ -n "${DEVELOPMENT_TEAM:-}" ]] || fail "DEVELOPER_ID_APP_IDENTITY requiere también DEVELOPMENT_TEAM."
+    [[ -n "${NOTARY_PROFILE:-}" ]] || fail "DEVELOPER_ID_APP_IDENTITY requiere también NOTARY_PROFILE (perfil de notarytool)."
+    SIGN_ARGS+=("CODE_SIGN_IDENTITY=$DEVELOPER_ID_APP_IDENTITY" "DEVELOPMENT_TEAM=$DEVELOPMENT_TEAM" ENABLE_HARDENED_RUNTIME=YES "OTHER_CODE_SIGN_FLAGS=--timestamp")
+    NOTARIZE=1
+    echo "Firma: Developer ID '$DEVELOPER_ID_APP_IDENTITY' (hardened runtime + notarización)."
+else
+    SIGN_ARGS+=(CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= ENABLE_HARDENED_RUNTIME=NO)
+    echo "Firma: ad-hoc (sin notarización)."
+fi
+
 xcodebuild \
     -project "$PROJECT_PATH" \
     -scheme "$SCHEME" \
     -configuration Release \
     -destination "generic/platform=macOS" \
     -derivedDataPath "$DERIVED_DATA_DIR" \
-    CODE_SIGN_STYLE=Manual \
-    CODE_SIGN_IDENTITY=- \
-    DEVELOPMENT_TEAM= \
-    ENABLE_HARDENED_RUNTIME=NO \
+    "${SIGN_ARGS[@]}" \
     ONLY_ACTIVE_ARCH=NO \
     "ARCHS=$UNIVERSAL_ARCHS" \
     build
@@ -97,6 +111,42 @@ xcodebuild \
 APP_PATH="$DERIVED_DATA_DIR/Build/Products/Release/$APP_NAME"
 [[ -d "$APP_PATH" ]] || fail "No se encontró la aplicación compilada en $APP_PATH."
 [[ -x "$APP_PATH/Contents/MacOS/$BINARY_NAME" ]] || fail "No existe el binario principal $APP_PATH/Contents/MacOS/$BINARY_NAME."
+
+# GPL compliance: the distributed bundle must carry the smartmontools license and
+# source offer (shipped inside the app as ThirdPartyNotices.txt).
+BUNDLED_NOTICES="$APP_PATH/Contents/Resources/ThirdPartyNotices.txt"
+[[ -f "$BUNDLED_NOTICES" ]] || fail "Falta ThirdPartyNotices.txt en el bundle (cumplimiento GPL de smartmontools)."
+grep -Fq "smartmontools" "$BUNDLED_NOTICES" || fail "ThirdPartyNotices.txt no incluye el aviso de smartmontools."
+grep -Fiq "source" "$BUNDLED_NOTICES" || fail "ThirdPartyNotices.txt no incluye la oferta de código fuente (GPL)."
+
+# The bundled smartctl is arm64-only unless made universal (see
+# Scripts/make_universal_smartctl.sh); warn so Intel coverage is a conscious choice.
+SMARTCTL_BUNDLED="$APP_PATH/Contents/Resources/Smartctl/smartctl"
+if [[ -f "$SMARTCTL_BUNDLED" ]] && command -v lipo >/dev/null 2>&1; then
+    SMARTCTL_ARCHS="$(lipo -archs "$SMARTCTL_BUNDLED" 2>/dev/null || echo unknown)"
+    if [[ " $SMARTCTL_ARCHS " != *" x86_64 "* ]]; then
+        echo "Aviso: smartctl empaquetado ($SMARTCTL_ARCHS) no es universal; en Intel se usará el smartctl de Homebrew/sistema. Ver Scripts/make_universal_smartctl.sh." >&2
+    fi
+fi
+
+if [[ "$NOTARIZE" -eq 1 ]]; then
+    # Xcode signs a resource executable without the hardened runtime, which fails
+    # notarization; re-sign the bundled smartctl with the runtime, then re-seal the
+    # app so the outer signature covers the updated helper.
+    if [[ -f "$SMARTCTL_BUNDLED" ]]; then
+        codesign --force --options runtime --timestamp --sign "$DEVELOPER_ID_APP_IDENTITY" "$SMARTCTL_BUNDLED"
+    fi
+    codesign --force --options runtime --timestamp --sign "$DEVELOPER_ID_APP_IDENTITY" "$APP_PATH"
+    codesign --verify --deep --strict "$APP_PATH"
+
+    NOTARIZE_ZIP="$APPCAST_WORK_DIR/notarize-$ZIP_NAME"
+    ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$NOTARIZE_ZIP"
+    echo "Enviando a notarización (notarytool, perfil $NOTARY_PROFILE)..."
+    xcrun notarytool submit "$NOTARIZE_ZIP" --keychain-profile "$NOTARY_PROFILE" --wait
+    xcrun stapler staple "$APP_PATH"
+    xcrun stapler validate "$APP_PATH"
+    rm -f "$NOTARIZE_ZIP"
+fi
 
 rm -f "$ZIP_PATH"
 ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_PATH"

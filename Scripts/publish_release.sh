@@ -138,6 +138,7 @@ require_command plutil
 require_command xcodebuild
 require_command codesign
 require_command lipo
+require_command xcrun
 
 [[ -f "$PROJECT_FILE" ]] || fail "No existe $PROJECT_FILE."
 [[ "$(git branch --show-current)" == "main" ]] || fail "La publicación solo se permite desde la rama main."
@@ -247,9 +248,22 @@ BUILT_PUBLIC_KEY="$(/usr/libexec/PlistBuddy -c 'Print :SUPublicEDKey' "$BUILT_IN
 
 codesign --verify --deep --strict "$APP_PATH"
 CODESIGN_OUTPUT="$(codesign -dv "$APP_PATH" 2>&1)"
-grep -Fq "Signature=adhoc" <<< "$CODESIGN_OUTPUT" || fail "La aplicación no está firmada ad-hoc."
-if grep -F "TeamIdentifier=" <<< "$CODESIGN_OUTPUT" | grep -Fqv "TeamIdentifier=not set"; then
-    fail "La firma ad-hoc no debe tener TeamIdentifier."
+if [[ -n "${DEVELOPER_ID_APP_IDENTITY:-}" ]]; then
+    if grep -Fq "Signature=adhoc" <<< "$CODESIGN_OUTPUT"; then
+        fail "Se esperaba firma Developer ID pero la app está firmada ad-hoc. Revisa CODE_SIGN_IDENTITY[sdk=macosx*] en el pbxproj (puede ganar al override)."
+    fi
+    if [[ -n "${DEVELOPMENT_TEAM:-}" ]] && ! grep -Fq "TeamIdentifier=$DEVELOPMENT_TEAM" <<< "$CODESIGN_OUTPUT"; then
+        fail "La firma no tiene el TeamIdentifier esperado ($DEVELOPMENT_TEAM)."
+    fi
+    xcrun stapler validate "$APP_PATH" || fail "El ticket de notarización no está grapado (xcrun stapler validate)."
+    if ! spctl -a -vvv --type exec "$APP_PATH" 2>&1 | grep -Fq "source=Notarized Developer ID"; then
+        fail "Gatekeeper no acepta la app como Developer ID notarizada."
+    fi
+else
+    grep -Fq "Signature=adhoc" <<< "$CODESIGN_OUTPUT" || fail "La aplicación no está firmada ad-hoc."
+    if grep -F "TeamIdentifier=" <<< "$CODESIGN_OUTPUT" | grep -Fqv "TeamIdentifier=not set"; then
+        fail "La firma ad-hoc no debe tener TeamIdentifier."
+    fi
 fi
 
 BINARY_ARCHS="$(lipo -archs "$APP_PATH/Contents/MacOS/$BINARY_NAME")"

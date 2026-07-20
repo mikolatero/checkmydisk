@@ -66,6 +66,48 @@ Updates use two separate kinds of signing:
 
 Because the app is not notarized, Gatekeeper may warn on the first installation. Use **right-click (or Control-click) > Open** in Finder to confirm that you want to open it.
 
+### Optional: Developer ID signing and notarization
+
+Ad-hoc signing is the default and requires no setup. To instead ship a Developer
+ID–signed, notarized build (no Gatekeeper warning), set these environment
+variables before running the release; when they are unset the scripts behave
+exactly as the ad-hoc flow above:
+
+```sh
+export DEVELOPER_ID_APP_IDENTITY="Developer ID Application: Your Name (TEAMID)"
+export DEVELOPMENT_TEAM="TEAMID"
+export NOTARY_PROFILE="checkmydisk-notary"   # xcrun notarytool store-credentials profile
+```
+
+Requires a paid Apple Developer account, a Developer ID Application certificate in
+the login keychain, and notary credentials stored with
+`xcrun notarytool store-credentials`. With these set, `prepare_update.sh` builds
+with the hardened runtime, re-signs the bundled `smartctl` with the runtime,
+submits to `notarytool --wait`, staples the ticket, and `publish_release.sh`
+verifies the Developer ID signature, stapling and Gatekeeper acceptance instead of
+the ad-hoc checks. Sparkle EdDSA signing is independent and unchanged.
+
+Note: the app target hard-codes `CODE_SIGN_IDENTITY[sdk=macosx*] = "-"`; if a
+Developer ID build still reports `Signature=adhoc`, that conditioned setting is
+winning over the command-line override — move Release signing to an `.xcconfig`
+or remove that line. `publish_release.sh` fails loudly in that case.
+
+### Bundled smartctl architecture
+
+The bundled `smartctl` is arm64-only, so on Intel Macs CheckMyDisk falls back to a
+Homebrew/system `smartctl`. To ship a universal backend, build both slices and
+combine them:
+
+```sh
+Scripts/make_universal_smartctl.sh /opt/homebrew/bin/smartctl /usr/local/bin/smartctl
+```
+
+### GPL compliance
+
+The bundled `smartctl` is GPL-2.0-or-later software from smartmontools. The app
+ships `ThirdPartyNotices.txt` with the license notice and a written source offer,
+and `prepare_update.sh` refuses to package a build whose bundle is missing it.
+
 The update feed and release assets are published at:
 
 - Appcast: `https://mikolatero.github.io/checkmydisk/appcast.xml`
