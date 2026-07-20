@@ -2053,6 +2053,26 @@
           }
         }
       }
+    },
+    "PDF Report...": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informe PDF…"
+          }
+        }
+      }
+    },
+    "Copy Diagnostics": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiar diagnóstico"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -239,6 +239,47 @@ final class ParserExtendedTests: XCTestCase {
         XCTAssertEqual(VolumeInfoProvider.physicalDisks(forContainer: "disk9", topology: VolumeInfoProvider.DiskTopology()), ["disk9"])
     }
 
+    func testPDFReportRendersValidMultiSectionDocument() throws {
+        let json = """
+        {
+          "model_name": "Samsung SSD 990 PRO 2TB",
+          "serial_number": "S6Z1NF0T900001",
+          "firmware_version": "4B2QJXD7",
+          "user_capacity": {"bytes": 2000398934016},
+          "logical_block_size": 512,
+          "rotation_rate": 0,
+          "trim": {"supported": true},
+          "smart_status": {"passed": true},
+          "temperature": {"current": 41, "lifetime_min": 20, "lifetime_max": 63},
+          "power_on_time": {"hours": 12045},
+          "power_cycle_count": 431,
+          "ata_smart_attributes": {"table": [
+            {"id": 5, "name": "Reallocated_Sector_Ct", "value": 100, "worst": 100, "thresh": 10, "flags": {"prefailure": true}, "raw": {"value": 0, "string": "0"}},
+            {"id": 9, "name": "Power_On_Hours", "value": 95, "worst": 95, "thresh": 0, "flags": {"prefailure": false}, "raw": {"value": 12045, "string": "12045"}},
+            {"id": 194, "name": "Temperature_Celsius", "value": 59, "worst": 63, "thresh": 0, "flags": {"prefailure": false}, "raw": {"value": 41, "string": "41 (Min/Max 20/63)"}},
+            {"id": 197, "name": "Current_Pending_Sector", "value": 100, "worst": 100, "thresh": 0, "flags": {"prefailure": false}, "raw": {"value": 0, "string": "0"}},
+            {"id": 241, "name": "Total_LBAs_Written", "value": 99, "worst": 99, "thresh": 0, "flags": {"prefailure": false}, "raw": {"value": 45000000000, "string": "45000000000"}}
+          ]},
+          "ata_smart_error_log": {"table": [
+            {"error_number": 1, "lifetime_hours": 11800, "error_description": "Error: UNC at LBA = 0x01c2f3a4", "prior_command": "READ DMA EXT"}
+          ]},
+          "ata_smart_self_test_log": {"standard": {"table": [
+            {"num": 1, "lifetime_hours": 12000, "type": {"string": "Extended offline"}, "status": {"string": "Completed without error"}},
+            {"num": 2, "lifetime_hours": 11500, "type": {"string": "Short offline"}, "status": {"string": "Completed without error"}}
+          ]}}
+        }
+        """
+        let snapshot = try SmartctlParser.parseSnapshot(Data(json.utf8), fallbackDevice: device)
+        let assessment = HealthEvaluator.evaluate(snapshot)
+        let pdf = PDFReportBuilder.pdf(snapshot: snapshot, assessment: assessment, anonymize: false)
+        XCTAssertGreaterThan(pdf.count, 1500)
+        XCTAssertEqual(pdf.prefix(4), Data("%PDF".utf8))
+        // Optional: write the sample somewhere for visual inspection.
+        if let out = ProcessInfo.processInfo.environment["CHECKMYDISK_PDF_OUT"] {
+            try pdf.write(to: URL(fileURLWithPath: out))
+        }
+    }
+
     private let extendedATAJSON = """
     {
       "model_name": "WDC WD40EFRX",

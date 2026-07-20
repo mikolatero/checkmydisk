@@ -92,8 +92,11 @@ struct DashboardView: View {
             }
 
             Menu {
+                Button(String(localized: "PDF Report...")) { saveReport(format: .pdf) }
                 Button(String(localized: "Text Report...")) { saveReport(format: .text) }
                 Button(String(localized: "JSON Report...")) { saveReport(format: .json) }
+                Divider()
+                Button(String(localized: "Copy Diagnostics")) { copyDiagnostics() }
             } label: {
                 Label("Save Report...", systemImage: "square.and.arrow.down")
             }
@@ -195,6 +198,7 @@ struct DashboardView: View {
     }
 
     private enum ReportFormat {
+        case pdf
         case text
         case json
     }
@@ -203,6 +207,9 @@ struct DashboardView: View {
         let panel = NSSavePanel()
         let sanitizedModel = snapshot.modelName.replacingOccurrences(of: "/", with: "-")
         switch format {
+        case .pdf:
+            panel.nameFieldStringValue = "CheckMyDisk-\(sanitizedModel)-Report.pdf"
+            panel.allowedContentTypes = [.pdf]
         case .text:
             panel.nameFieldStringValue = "CheckMyDisk-\(sanitizedModel)-Report.txt"
             panel.allowedContentTypes = [.plainText]
@@ -213,6 +220,9 @@ struct DashboardView: View {
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do {
             switch format {
+            case .pdf:
+                let data = PDFReportBuilder.pdf(snapshot: snapshot, assessment: assessment, anonymize: store.settings.anonymizeReports)
+                try data.write(to: url, options: .atomic)
             case .text:
                 let text = ReportBuilder.textReport(snapshot: snapshot, assessment: assessment, anonymize: store.settings.anonymizeReports)
                 try text.write(to: url, atomically: true, encoding: .utf8)
@@ -224,6 +234,12 @@ struct DashboardView: View {
             saveErrorMessage = error.localizedDescription
             showSaveError = true
         }
+    }
+
+    private func copyDiagnostics() {
+        let text = ReportBuilder.textReport(snapshot: snapshot, assessment: assessment, anonymize: store.settings.anonymizeReports)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
     }
 }
 
