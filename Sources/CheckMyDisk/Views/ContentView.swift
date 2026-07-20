@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct SidebarSelection: Hashable {
-    let deviceID: String
-    let section: DriveSection
+enum SidebarRoute: Hashable {
+    case fleet
+    case drive(deviceID: String, section: DriveSection)
 }
 
 struct ContentView: View {
@@ -35,18 +35,25 @@ struct ContentView: View {
 struct SidebarView: View {
     @Environment(DriveStore.self) private var store
 
-    private var selection: Binding<SidebarSelection?> {
+    private var selection: Binding<SidebarRoute?> {
         Binding {
-            store.selectedDeviceID.map { SidebarSelection(deviceID: $0, section: store.selectedSection) }
+            if store.showFleet { return .fleet }
+            return store.selectedDeviceID.map { .drive(deviceID: $0, section: store.selectedSection) }
         } set: { newValue in
-            if let newValue {
-                Task { @MainActor in
-                    if store.selectedDeviceID != newValue.deviceID {
-                        store.selectedDeviceID = newValue.deviceID
+            Task { @MainActor in
+                switch newValue {
+                case .fleet:
+                    store.showFleet = true
+                case let .drive(deviceID, section):
+                    store.showFleet = false
+                    if store.selectedDeviceID != deviceID {
+                        store.selectedDeviceID = deviceID
                     }
-                    if store.selectedSection != newValue.section {
-                        store.selectedSection = newValue.section
+                    if store.selectedSection != section {
+                        store.selectedSection = section
                     }
+                case nil:
+                    break
                 }
             }
         }
@@ -55,6 +62,10 @@ struct SidebarView: View {
     var body: some View {
         VStack(spacing: 0) {
             List(selection: selection) {
+                Section {
+                    Label("All Drives", systemImage: "square.grid.2x2.fill")
+                        .tag(SidebarRoute.fleet)
+                }
                 ForEach(store.devices) { device in
                     Section {
                         ForEach(DriveSection.allCases) { section in
@@ -65,7 +76,7 @@ struct SidebarView: View {
                                     .foregroundStyle(color(for: section))
                             }
                             .badge(badgeCount(for: device, section: section) ?? 0)
-                            .tag(SidebarSelection(deviceID: device.id, section: section))
+                            .tag(SidebarRoute.drive(deviceID: device.id, section: section))
                         }
                     } header: {
                         deviceHeader(for: device)
@@ -180,7 +191,9 @@ struct DetailView: View {
 
     var body: some View {
         Group {
-            if let snapshot = store.selectedSnapshot, let assessment = store.selectedAssessment {
+            if store.showFleet {
+                FleetView()
+            } else if let snapshot = store.selectedSnapshot, let assessment = store.selectedAssessment {
                 switch store.selectedSection {
                 case .dashboard:
                     DashboardView(snapshot: snapshot, assessment: assessment)

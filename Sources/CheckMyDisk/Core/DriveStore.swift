@@ -16,6 +16,7 @@ final class DriveStore {
     var volumes: [String: [VolumeInfo]] = [:]
     var selectedDeviceID: String?
     var selectedSection: DriveSection = .dashboard
+    var showFleet = false
     var isLoading = false
     var isSelfTestPolling = false
     /// Scan/executable failures. Per-device read failures land in `deviceErrors`.

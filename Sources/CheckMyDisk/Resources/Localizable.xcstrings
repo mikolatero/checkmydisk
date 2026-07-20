@@ -2013,6 +2013,46 @@
           }
         }
       }
+    },
+    "All Drives": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos los discos"
+          }
+        }
+      }
+    },
+    "Drive": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disco"
+          }
+        }
+      }
+    },
+    "Lifetime": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vida"
+          }
+        }
+      }
+    },
+    "Issues": {
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incidencias"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

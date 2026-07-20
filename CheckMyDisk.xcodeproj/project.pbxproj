@@ -38,6 +38,7 @@
 		A00000000000000000000136 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000238 /* MenuBarContentView.swift */; };
 		A00000000000000000000138 /* TrendAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000239 /* TrendAnalyzer.swift */; };
 		A00000000000000000000139 /* SelfTestScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000240 /* SelfTestScheduler.swift */; };
+		A00000000000000000000140 /* FleetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000241 /* FleetView.swift */; };
 		A00000000000000000000125 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000802 /* Sparkle */; };
 		A00000000000000000000137 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000804 /* GRDB */; };
 		A00000000000000000000130 /* AppleNVMeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */; };
@@ -91,6 +92,7 @@
 		A00000000000000000000238 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
 		A00000000000000000000239 /* TrendAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendAnalyzer.swift; sourceTree = "<group>"; };
 		A00000000000000000000240 /* SelfTestScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfTestScheduler.swift; sourceTree = "<group>"; };
+		A00000000000000000000241 /* FleetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FleetView.swift; sourceTree = "<group>"; };
 		A00000000000000000000226 /* CheckMyDisk-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CheckMyDisk-Info.plist"; sourceTree = "<group>"; };
 		A00000000000000000000230 /* AppleNVMeIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleNVMeIntegrationTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000231 /* HealthEvaluatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthEvaluatorTests.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				A00000000000000000000215 /* PreferencesView.swift */,
 				A00000000000000000000222 /* HistoryView.swift */,
 					A00000000000000000000238 /* MenuBarContentView.swift */,
+					A00000000000000000000241 /* FleetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 					A00000000000000000000128 /* SelfTestCoordinator.swift in Sources */,
 					A00000000000000000000138 /* TrendAnalyzer.swift in Sources */,
 					A00000000000000000000139 /* SelfTestScheduler.swift in Sources */,
+					A00000000000000000000140 /* FleetView.swift in Sources */,
 					A00000000000000000000129 /* AppDelegate.swift in Sources */,
 					A00000000000000000000136 /* MenuBarContentView.swift in Sources */,
 			);
