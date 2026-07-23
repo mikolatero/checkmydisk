@@ -3,6 +3,14 @@
     <channel>
         <title>CheckMyDisk</title>
         <item>
+            <title>0.1.5</title>
+            <pubDate>Thu, 23 Jul 2026 15:10:51 +0200</pubDate>
+            <sparkle:version>6</sparkle:version>
+            <sparkle:shortVersionString>0.1.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/mikolatero/checkmydisk/releases/download/v0.1.5/CheckMyDisk-0.1.5-6.zip" length="10463430" type="application/octet-stream" sparkle:edSignature="/CZdH1Jxy1CGQQ5FXSVEdlovcrM5UytwI99RvpGka+TWIP82xJkAZcAKyH2X6GA+7AQPyfTnGpwfksKZ/k5yCA=="/>
+        </item>
+        <item>
             <title>0.1.3</title>
             <pubDate>Mon, 20 Jul 2026 14:04:10 +0200</pubDate>
             <sparkle:version>4</sparkle:version>
@@ -17,14 +25,6 @@
             <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/mikolatero/checkmydisk/releases/download/v0.1.2/CheckMyDisk-0.1.2-3.zip" length="5402907" type="application/octet-stream" sparkle:edSignature="nDwes2Vvf2NrH3YIbiA4v89Ucto6NBUNu1wg+J82uE0FWqI8yO65WJObW/+5RCPwhfnwT4SotazbwBdzVg5jDg=="/>
-        </item>
-        <item>
-            <title>0.1.1</title>
-            <pubDate>Thu, 16 Jul 2026 15:54:07 +0200</pubDate>
-            <sparkle:version>2</sparkle:version>
-            <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/mikolatero/checkmydisk/releases/download/v0.1.1/CheckMyDisk-0.1.1-2.zip" length="5401702" type="application/octet-stream" sparkle:edSignature="CWCi0Qkvc+37kdEmIdV5rZvxCYpDHakdqTY4F034/zmJM3Xtspsj3iHaNzNK0iJA6MtJQq5mpwqAQDZlSdXpAg=="/>
         </item>
     </channel>
 </rss>
