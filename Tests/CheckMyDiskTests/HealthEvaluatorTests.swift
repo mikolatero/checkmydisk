@@ -22,6 +22,24 @@ final class HealthEvaluatorTests: XCTestCase {
         XCTAssertTrue(snapshot.attributes.allSatisfy { $0.isSynthetic == true })
     }
 
+    // MARK: - NVMe tras puente USB: estado UNKNOWN con aviso accionable
+
+    func testBridgeLimitedSnapshotReportsUnknownWithActionableNote() throws {
+        let base = try SmartctlParser.parseSnapshot(Data(temperatureJSON(temperature: 40).utf8), fallbackDevice: device)
+        let assessment = HealthEvaluator.evaluate(base.markingBridgeLimited())
+
+        XCTAssertEqual(assessment.smartStatus, .unknown, "no podemos leer el disco: estado desconocido, no OK/WARNING")
+        XCTAssertEqual(assessment.problems.count, 1, "solo el aviso claro del puente, sin ruido genérico")
+        let problem = try XCTUnwrap(assessment.problems.first)
+        XCTAssertEqual(problem.state, .unknown)
+        XCTAssertTrue(problem.detail.localizedCaseInsensitiveContains("USB"))
+        XCTAssertTrue(problem.detail.localizedCaseInsensitiveContains("Thunderbolt"))
+        XCTAssertFalse(
+            assessment.problems.contains { $0.title.localizedCaseInsensitiveContains("incomplete") },
+            "no debe añadirse el aviso genérico 'may be incomplete'"
+        )
+    }
+
     // MARK: - Umbrales de temperatura según tipo de disco
 
     func testHDDTemperatureThresholdIsLower() throws {

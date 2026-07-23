@@ -44,8 +44,12 @@ struct FleetView: View {
                     }
 
                     TableColumn("Health") { device in
-                        Text(store.assessments[device.id].map { "\($0.overallHealth)%" } ?? "—")
-                            .monospacedDigit()
+                        if store.snapshots[device.id]?.hasBasicHealthData == false {
+                            Text(verbatim: "—").foregroundStyle(.secondary)
+                        } else {
+                            Text(store.assessments[device.id].map { "\($0.overallHealth)%" } ?? "—")
+                                .monospacedDigit()
+                        }
                     }
                     .width(min: 70, ideal: 90)
 

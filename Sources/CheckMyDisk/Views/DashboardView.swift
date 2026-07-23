@@ -78,8 +78,10 @@ struct DashboardView: View {
             Spacer()
 
             HStack(spacing: 16) {
-                MetricGauge(title: String(localized: "Health"), percent: assessment.overallHealth)
-                MetricGauge(title: String(localized: "Performance"), percent: assessment.overallPerformance)
+                if snapshot.hasBasicHealthData {
+                    MetricGauge(title: String(localized: "Health"), percent: assessment.overallHealth)
+                    MetricGauge(title: String(localized: "Performance"), percent: assessment.overallPerformance)
+                }
                 if let lifetime = assessment.ssdLifetimeLeft {
                     MetricGauge(title: String(localized: "Lifetime Left"), percent: lifetime)
                 }

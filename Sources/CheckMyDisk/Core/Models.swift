@@ -18,6 +18,15 @@ enum DriveHealthState: String, Codable, CaseIterable {
     }
 }
 
+/// Why a drive's SMART data could not be trusted or read. Kept separate from the
+/// health state: the drive may well be healthy, we simply cannot see its data.
+enum DriveAccessLimitation: String, Codable, Hashable, Sendable {
+    /// smartctl reached the device but no pass-through returned trustworthy SMART.
+    /// Typical of NVMe SSDs in USB enclosures on macOS (the ATA/SAT path returns a
+    /// corrupt structure) or SATA-in-USB drives that need the SAT driver plus root.
+    case smartUnavailableOverBridge
+}
+
 enum DriveSection: String, CaseIterable, Codable, Identifiable {
     case dashboard = "Dashboard"
     case indicators = "Health Indicators"
@@ -159,12 +168,12 @@ struct DriveSnapshot: Identifiable, Codable, Hashable {
     let firmwareVersion: String?
     let userCapacityBytes: UInt64?
     let sectorSize: String?
-    let smartStatusPassed: Bool?
-    let temperature: Int?
-    let powerOnHours: UInt64?
-    let powerCycles: UInt64?
+    var smartStatusPassed: Bool?
+    var temperature: Int?
+    var powerOnHours: UInt64?
+    var powerCycles: UInt64?
     let nvme: NVMeHealthLog?
-    let attributes: [SmartAttribute]
+    var attributes: [SmartAttribute]
     let errorLog: [SmartErrorEntry]
     let selfTests: [SmartSelfTestEntry]
     let activeSelfTest: ActiveSelfTestStatus?
@@ -182,6 +191,10 @@ struct DriveSnapshot: Identifiable, Codable, Hashable {
     var temperatureLifetimeMin: Int?
     var temperatureLifetimeMax: Int?
     var sctTemperatureHistory: SCTTemperatureHistory?
+    /// Set when smartctl reached the drive but could not return trustworthy SMART
+    /// (e.g. an NVMe SSD behind a USB bridge on macOS). The evaluator turns this
+    /// into a clear, actionable note instead of a generic "incomplete" warning.
+    var accessLimitation: DriveAccessLimitation?
 
     /// Stable identity for on-disk history: /dev/diskN numbering can change
     /// between boots, the serial number cannot.
@@ -200,6 +213,43 @@ struct DriveSnapshot: Identifiable, Codable, Hashable {
     /// drive does not support, not to a real read failure.
     var hasBasicHealthData: Bool {
         smartStatusPassed != nil || nvme != nil || !attributes.isEmpty
+    }
+
+    /// Whether the health data can be trusted. An NVMe drive read through a USB
+    /// bridge as ATA answers with a corrupt SMART structure — invalid checksum,
+    /// every row named "Unknown_Attribute", nonsensical raw values — which must
+    /// never be shown as real health. A genuine ATA/SATA drive reports at least
+    /// one recognized attribute and a valid checksum; a real NVMe read carries the
+    /// NVMe health log.
+    var hasTrustworthyHealthData: Bool {
+        if nvme != nil { return true }
+        guard smartStatusPassed != nil else { return false }
+        // A drive that reports an overall verdict but no attribute table (some USB
+        // SATA bridges) is still trustworthy. Garbage reads always carry a populated
+        // table, so they never reach this branch.
+        if attributes.isEmpty { return true }
+        if messagesMentionChecksumError { return false }
+        return attributes.contains { attribute in
+            !attribute.name.isEmpty && !attribute.name.hasPrefix("Unknown")
+        }
+    }
+
+    private var messagesMentionChecksumError: Bool {
+        messages.contains { $0.text.range(of: "checksum", options: .caseInsensitive) != nil }
+    }
+
+    /// Returns a copy with the untrusted health data stripped and the limitation
+    /// recorded, so nothing derived from a corrupt read (attributes, SMART verdict,
+    /// temperature, counters) reaches the UI, history, or reports.
+    func markingBridgeLimited() -> DriveSnapshot {
+        var copy = self
+        copy.attributes = []
+        copy.smartStatusPassed = nil
+        copy.temperature = nil
+        copy.powerOnHours = nil
+        copy.powerCycles = nil
+        copy.accessLimitation = .smartUnavailableOverBridge
+        return copy
     }
 }
 

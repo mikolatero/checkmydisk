@@ -16,7 +16,7 @@ It uses a dual `smartctl` backend:
 - Full `smartctl -x` data collection: NVMe and ATA/SATA SMART attributes, ATA Device Statistics, SATA Phy event counters, SCT firmware temperature history, NVMe error log and temperature sensors
 - Extended device identity: rotation rate (HDD/SSD), form factor, WWN, interface speed, ATA/SATA/NVMe standard version, TRIM support, lifetime min/max temperature
 - Interpretation of the `smartctl` exit-status bitmask (disk failing, pre-fail attributes below threshold, ...) and surfacing of `smartctl` messages in the UI
-- Automatic `-d sat` retry for USB enclosures that need SAT pass-through
+- Access-method ladder for USB enclosures (`-d sat` plus the `sntrealtek`/`sntjmicron`/`sntasmedia` NVMe-bridge pass-throughs), accepting only trustworthy SMART and flagging NVMe-over-USB drives that macOS cannot read instead of showing corrupt ATA values
 - Per-volume capacity/free-space display mapped to the physical disk (APFS-aware)
 - History charts (Swift Charts): temperature, health, performance, and wear over time, backed by SQLite snapshots with configurable retention
 - Short and full self-test launch and cancel, with correct ETA per test type
@@ -150,6 +150,16 @@ The script increments the patch version and build number only in the application
 ## USB / FireWire / SAT
 
 macOS does not expose SMART data for many USB/SAT enclosures by default. CheckMyDisk reads any external drive that `smartctl` can see, detects common SATSMARTDriver installation paths, and shows guidance when external SMART support is unavailable. It does not install kernel extensions. For enclosures that expose SMART only with root privileges, an optional privileged helper can run `smartctl` as root — see [Privileged Helper](#privileged-helper-root-smart-access).
+
+When a direct read does not return usable SMART, CheckMyDisk walks a ladder of access methods — `auto → -d sat → -d sntrealtek / -d sntjmicron / -d sntasmedia` — and accepts a result **only** when it carries trustworthy data. The bridge pass-throughs are attempted only after the direct reads fail, so healthy drives never pay for the extra probes.
+
+### NVMe SSDs in USB enclosures
+
+An NVMe SSD in a USB enclosure is a special case on macOS. The enclosure's bridge chip (Realtek, JMicron, ASMedia, …) is reached by `smartctl` as an ATA/SAT device, but sending ATA SMART commands to an NVMe drive returns a **corrupt structure** — invalid SMART checksum, every row named `Unknown_Attribute`, nonsensical raw values, and a misleading `PASSED`. Those numbers are not real health data and must be ignored.
+
+The correct NVMe pass-through types (`-d sntrealtek`, `-d sntjmicron`, `-d sntasmedia`) require raw SCSI access that **macOS does not grant to `smartctl`** for USB mass storage: they fail with `Not a device of type 'scsi'`. That error is raised before privileges are checked, so neither `sudo` nor the privileged helper changes the outcome. On Linux the same `snt*` pass-throughs work, so the ladder surfaces real NVMe SMART there.
+
+Because of this, CheckMyDisk does not present the corrupt ATA values as health. When no access method returns trustworthy SMART — the typical result for NVMe-over-USB on macOS — the drive is still identified (model, serial) but marked `UNKNOWN` with a clear note instead of a fabricated health score. **For full NVMe SMART on macOS, connect the drive through a Thunderbolt/USB4 NVMe enclosure (native NVMe, read with `-d nvme`) or an internal M.2 slot.**
 
 ## Privileged Helper (root SMART access)
 

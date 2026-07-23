@@ -72,8 +72,14 @@ enum HealthEvaluator {
             ))
         }
 
-        problems.append(contentsOf: exitStatusProblems(snapshot))
-        problems.append(contentsOf: messageProblems(snapshot))
+        if let limitation = snapshot.accessLimitation {
+            // A clear, actionable note replaces the generic exit-bit/message noise
+            // when we know the read was blocked at the connection level.
+            problems.append(accessLimitationProblem(limitation))
+        } else {
+            problems.append(contentsOf: exitStatusProblems(snapshot))
+            problems.append(contentsOf: messageProblems(snapshot))
+        }
 
         let smartState = strongestState(in: problems) ?? (snapshot.smartStatusPassed == true ? .ok : .unknown)
         let health = calculateHealth(snapshot: snapshot, problems: problems)
@@ -92,6 +98,17 @@ enum HealthEvaluator {
     /// Spinning drives run hotter into trouble sooner than SSDs.
     static func temperatureThresholds(for snapshot: DriveSnapshot) -> (warning: Int, failing: Int) {
         snapshot.isRotational == true ? (55, 65) : (70, 85)
+    }
+
+    private static func accessLimitationProblem(_ limitation: DriveAccessLimitation) -> HealthProblem {
+        switch limitation {
+        case .smartUnavailableOverBridge:
+            return HealthProblem(
+                title: String(localized: "SMART unavailable over this USB bridge"),
+                state: .unknown,
+                detail: String(localized: "smartctl reached the drive but could not read valid SMART data through the USB bridge. NVMe SSDs in USB enclosures cannot expose their NVMe SMART data on macOS — connect the drive through a Thunderbolt/USB4 NVMe enclosure or an internal M.2 slot for full health data. A SATA drive behind a bridge may instead need the SAT-SMART driver and elevated privileges.")
+            )
+        }
     }
 
     private static func exitStatusProblems(_ snapshot: DriveSnapshot) -> [HealthProblem] {

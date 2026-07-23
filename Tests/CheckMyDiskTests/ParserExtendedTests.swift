@@ -21,6 +21,102 @@ final class ParserExtendedTests: XCTestCase {
         XCTAssertEqual(snapshot.temperatureLifetimeMax, 55)
     }
 
+    // MARK: - NVMe tras puente USB: no confiar en la lectura ATA basura
+
+    func testGarbageATAReadIsNotTrustworthy() throws {
+        // Un NVMe leído como ATA a través del puente USB "responde" pero con una
+        // estructura corrupta: checksum inválido y todas las filas "Unknown_Attribute".
+        let snapshot = try SmartctlParser.parseSnapshot(Data(bridgeGarbageJSON.utf8), fallbackDevice: device)
+        XCTAssertFalse(snapshot.attributes.isEmpty, "el parser aún lee las filas crudas")
+        XCTAssertEqual(snapshot.smartStatusPassed, true, "el PASSED engañoso está presente en el JSON")
+        XCTAssertFalse(snapshot.hasTrustworthyHealthData, "filas 'Unknown_Attribute' + checksum inválido no son fiables")
+    }
+
+    func testRealSATAReadIsTrustworthy() throws {
+        let snapshot = try SmartctlParser.parseSnapshot(Data(realSATAJSON.utf8), fallbackDevice: device)
+        XCTAssertTrue(snapshot.hasTrustworthyHealthData, "atributos reconocidos + checksum válido son fiables")
+    }
+
+    func testStatusOnlyReadIsTrustworthy() throws {
+        // Algunos puentes SATA-USB devuelven el veredicto global sin tabla de
+        // atributos; sigue siendo un dato fiable y no debe marcarse como puente roto.
+        let json = """
+        { "smartctl": { "exit_status": 0 }, "model_name": "Some SATA SSD", "smart_status": { "passed": true } }
+        """
+        let snapshot = try SmartctlParser.parseSnapshot(Data(json.utf8), fallbackDevice: device)
+        XCTAssertTrue(snapshot.attributes.isEmpty)
+        XCTAssertTrue(snapshot.hasTrustworthyHealthData)
+    }
+
+    func testMarkingBridgeLimitedStripsUntrustedData() throws {
+        let snapshot = try SmartctlParser.parseSnapshot(Data(bridgeGarbageJSON.utf8), fallbackDevice: device)
+        let limited = snapshot.markingBridgeLimited()
+        XCTAssertTrue(limited.attributes.isEmpty)
+        XCTAssertNil(limited.smartStatusPassed)
+        XCTAssertNil(limited.temperature)
+        XCTAssertFalse(limited.hasBasicHealthData)
+        XCTAssertEqual(limited.accessLimitation, .smartUnavailableOverBridge)
+        // La identidad del disco se conserva para poder listarlo.
+        XCTAssertEqual(limited.modelName, "Samsung SSD 990 PRO 2TB")
+    }
+
+    // MARK: - Escalera de acceso (auto -> sat -> snt*)
+
+    func testCandidateLadderForATAAddsSATAndNVMeBridges() {
+        let ata = SmartDeviceSummary(name: "/dev/disk6", infoName: "", type: "ata", protocolName: "ATA")
+        let joined = SmartctlRunner.candidateArguments(for: ata).map { $0.arguments.joined(separator: " ") }
+        XCTAssertEqual(joined.first, "-x -j /dev/disk6", "primero el auto-detect")
+        XCTAssertTrue(joined.contains("-d sat -x -j /dev/disk6"))
+        XCTAssertTrue(joined.contains("-d sntrealtek -x -j /dev/disk6"))
+        XCTAssertTrue(joined.contains("-d sntjmicron -x -j /dev/disk6"))
+        XCTAssertTrue(joined.contains("-d sntasmedia -x -j /dev/disk6"))
+        XCTAssertTrue(SmartctlRunner.candidateArguments(for: ata).dropFirst().allSatisfy { $0.isBridgeAccess })
+    }
+
+    func testCandidateLadderForNVMeStaysDirect() {
+        let nvme = SmartDeviceSummary(name: "/dev/disk0", infoName: "", type: "nvme", protocolName: "NVMe")
+        let candidates = SmartctlRunner.candidateArguments(for: nvme)
+        XCTAssertEqual(candidates.count, 1, "un NVMe nativo se lee directo, sin puentes")
+        XCTAssertEqual(candidates.first?.isBridgeAccess, false)
+    }
+
+    func testCandidateLadderForSATSkipsRedundantSAT() {
+        // `device` ya viene tipado "sat": el auto-detect ya es la lectura SAT, así que
+        // no repetimos `-d sat`, pero sí probamos los puentes NVMe.
+        let joined = SmartctlRunner.candidateArguments(for: device).map { $0.arguments.joined(separator: " ") }
+        XCTAssertFalse(joined.contains { $0.hasPrefix("-d sat ") }, "no repetir la lectura SAT")
+        XCTAssertTrue(joined.contains("-d sntrealtek -x -j /dev/disk1"))
+    }
+
+    private let bridgeGarbageJSON = """
+    {
+     "smartctl": { "version": [7, 5],
+       "messages": [ { "string": "Warning! SMART Attribute Data Structure error: invalid SMART checksum.", "severity": "warning" } ],
+       "exit_status": 4 },
+     "device": { "name": "/dev/disk6", "info_name": "/dev/disk6", "type": "ata", "protocol": "ATA" },
+     "model_name": "Samsung SSD 990 PRO 2TB",
+     "smart_status": { "passed": true },
+     "temperature": { "current": 45 },
+     "ata_smart_attributes": { "table": [
+       { "id": 32, "name": "Unknown_Attribute", "value": 0, "worst": 0, "thresh": 32, "when_failed": "now", "flags": { "prefailure": false }, "raw": { "value": 89289182412800, "string": "89289182412800" } },
+       { "id": 88, "name": "Unknown_Attribute", "value": 68, "worst": 97, "thresh": 74, "when_failed": "now", "flags": { "prefailure": false }, "raw": { "value": 35688735929171, "string": "35688735929171" } }
+     ] }
+    }
+    """
+
+    private let realSATAJSON = """
+    {
+     "smartctl": { "version": [7, 5], "exit_status": 0 },
+     "device": { "name": "/dev/disk3", "info_name": "/dev/disk3 [SAT]", "type": "sat", "protocol": "ATA" },
+     "model_name": "Crucial CT1000MX500SSD1",
+     "smart_status": { "passed": true },
+     "ata_smart_attributes": { "table": [
+       { "id": 9, "name": "Power_On_Hours", "value": 99, "worst": 99, "thresh": 0, "flags": { "prefailure": false }, "raw": { "value": 1234, "string": "1234" } },
+       { "id": 5, "name": "Reallocated_Sector_Ct", "value": 100, "worst": 100, "thresh": 10, "flags": { "prefailure": true }, "raw": { "value": 0, "string": "0" } }
+     ] }
+    }
+    """
+
     func testParsesDeviceStatisticsAndPhyCounters() throws {
         let snapshot = try SmartctlParser.parseSnapshot(Data(extendedATAJSON.utf8), fallbackDevice: device)
         XCTAssertTrue(snapshot.deviceStatistics.contains { $0.name == "Power-on Hours" && $0.value == "5000" })

@@ -60,25 +60,64 @@ final class SmartctlRunner: @unchecked Sendable {
     }
 
     func readAll(device: SmartDeviceSummary) async throws -> DriveSnapshot {
-        let arguments = ["-x", "-j", device.name]
-        do {
-            let output = try await run(arguments)
-            return try parseSnapshot(output, arguments: arguments, device: device)
-        } catch let error as SmartctlError {
-            // Many USB enclosures only answer through SAT pass-through.
-            guard case .failed = error, shouldRetryWithSAT(device) else { throw error }
-            let satArguments = ["-d", "sat", "-x", "-j", device.name]
-            guard let output = try? await run(satArguments),
-                  let snapshot = try? parseSnapshot(output, arguments: satArguments, device: device) else {
-                throw error
+        // Walk a ladder of access methods and return the first that yields
+        // trustworthy SMART. USB enclosures need pass-through: SATA drives answer
+        // through `-d sat`; NVMe SSDs behind a USB bridge need the vendor NVMe
+        // pass-through (`sntrealtek`/`sntjmicron`/`sntasmedia`). Reading an NVMe
+        // drive as ATA "succeeds" but returns a corrupt structure, so a parseable
+        // reply is not enough — it must pass `hasTrustworthyHealthData`.
+        let candidates = Self.candidateArguments(for: device)
+        var fallback: DriveSnapshot?
+        var triedBridgeAccess = false
+        var lastError: Error?
+
+        for candidate in candidates {
+            triedBridgeAccess = triedBridgeAccess || candidate.isBridgeAccess
+            do {
+                let output = try await run(candidate.arguments)
+                let snapshot = try parseSnapshot(output, arguments: candidate.arguments, device: device)
+                if snapshot.hasTrustworthyHealthData {
+                    return snapshot
+                }
+                // Keep the first parseable reply (it still carries model/serial and
+                // identity) as a fallback in case nothing trustworthy turns up.
+                if fallback == nil { fallback = snapshot }
+            } catch {
+                lastError = error
             }
-            return snapshot
         }
+
+        guard let fallback else { throw lastError ?? SmartctlError.executableNotFound }
+        // Reached the drive but no pass-through returned trustworthy data. When we
+        // tried bridge access, flag it so the UI can explain the NVMe-over-USB
+        // limitation and drop the corrupt data instead of showing it as real.
+        return triedBridgeAccess ? fallback.markingBridgeLimited() : fallback
     }
 
-    private func shouldRetryWithSAT(_ device: SmartDeviceSummary) -> Bool {
+    struct SmartctlCandidate: Equatable {
+        let arguments: [String]
+        /// True for pass-through attempts (`-d sat` / `snt*`); their collective
+        /// failure means SMART is unavailable over the bridge, not a dead drive.
+        let isBridgeAccess: Bool
+    }
+
+    /// Access methods to try, in order. Native NVMe and already-typed devices read
+    /// directly; anything else may be a drive in a USB enclosure, so we add SAT and
+    /// the NVMe-bridge pass-through types. Bridge attempts only run when the direct
+    /// reads above them fail to return trustworthy data, so healthy drives never pay
+    /// for the extra probes.
+    static func candidateArguments(for device: SmartDeviceSummary) -> [SmartctlCandidate] {
+        let name = device.name
+        var candidates = [SmartctlCandidate(arguments: ["-x", "-j", name], isBridgeAccess: false)]
         let type = device.type.lowercased()
-        return type != "nvme" && !type.contains("sat")
+        guard type != "nvme" else { return candidates }
+        if !type.contains("sat") {
+            candidates.append(SmartctlCandidate(arguments: ["-d", "sat", "-x", "-j", name], isBridgeAccess: true))
+        }
+        for bridge in ["sntrealtek", "sntjmicron", "sntasmedia"] {
+            candidates.append(SmartctlCandidate(arguments: ["-d", bridge, "-x", "-j", name], isBridgeAccess: true))
+        }
+        return candidates
     }
 
     func startSelfTest(device: SmartDeviceSummary, kind: String) async throws {
